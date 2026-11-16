@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dulce Vita | Arqueo de caja</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        body{background:#F8EEDC}
+        .marca{background:#6B2635}
+        .color-marca{color:#6B2635}
+        .vh-100{min-height:100vh}
+        #tablaArqueosDatos{min-width:1080px}
+        #tablaArqueosDatos th,#tablaArqueosDatos td{white-space:nowrap}
+        @media(max-width:991.98px){.vh-100{min-height:auto}}
+        @media print{
+            @page{size:A4 landscape;margin:11mm}
+            body{background:#fff!important;color:#202124!important;font-family:Arial,sans-serif;font-size:9pt;line-height:1.3}
+            body *{visibility:hidden!important}
+            #seccionReporte,#seccionReporte *{visibility:visible!important}
+            #seccionReporte{position:absolute!important;top:0!important;left:0!important;width:100%!important;margin:0!important;padding:0!important}
+            #seccionReporte .card{border:0!important;box-shadow:none!important}
+            #seccionReporte>.card-header{display:none!important}
+            #seccionReporte .card-body{padding:10px 0 0!important}
+            #formReporte{display:none!important}
+            #seccionReporte h3{margin:11px 0 5px!important;color:#6B2635!important;font-size:10pt!important;font-weight:700!important;break-after:avoid}
+            #seccionReporte .table-responsive{overflow:visible!important}
+            #seccionReporte table{width:100%!important;margin:0 0 10px!important;font-size:7.5pt!important}
+            #seccionReporte th,#seccionReporte td{padding:4px 5px!important;border-color:#d5d5d5!important;vertical-align:top!important}
+            #seccionReporte th{background:#f1f1f1!important;color:#252525!important;font-weight:700!important}
+            #resumenTotalesArqueo .card{break-inside:avoid;page-break-inside:avoid}
+            #resumenTotalesArqueo .card-body{padding:9px!important}
+            #resumenTotalesArqueo .monto-resumen{font-size:12pt!important}
+            #resumenTotalesArqueo .detalle-resumen{font-size:7pt!important}
+            #seccionReporte thead{display:table-header-group}
+            #seccionReporte tfoot{display:table-footer-group;font-weight:700}
+            #seccionReporte tr{break-inside:avoid;page-break-inside:avoid}
+            #seccionReporte #tablaIngresos td:nth-child(3),#seccionReporte #tablaEgresos td:nth-child(3){overflow-wrap:anywhere}
+            #encabezadoImpresion{display:flex!important;justify-content:space-between;align-items:center;border-bottom:1px solid #d5d5d5;padding-bottom:8px;margin-bottom:9px}
+            #encabezadoImpresion img{width:56px;height:56px;object-fit:contain}
+            #encabezadoImpresion h1{font-size:17pt;margin:0;color:#6B2635}
+            #encabezadoImpresion p{margin:2px 0;color:#555;font-size:8pt}
+            #periodoImpresion{text-align:right}
+            #firmasImpresion{display:flex!important;gap:50px;margin-top:30px;break-inside:avoid}
+            #firmasImpresion>div{width:42%;text-align:center;border-top:1px solid #555;padding-top:5px;font-size:8pt}
+            footer,aside,nav,#mensajeArqueo,#estadoCaja,#formAbrirCaja,#resumenCaja,#btnImprimirReporte{display:none!important}
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <aside class="col-lg-2 p-0">
+                <div class="d-flex flex-column vh-100 shadow-lg marca">
+                    <div class="text-center py-4">
+                        <img src="logo.png" alt="Logo Dulce Vita" width="90" class="mb-3">
+                        <h2 class="text-white fw-bold">Dulce Vita</h2>
+                        <p class="text-warning">Panel Administrativo</p>
+                    </div>
+                    <hr class="border-light">
+                    <div class="px-3">
+                        <a href="dashboard.html" class="btn btn-outline-light w-100 text-start mb-3"><i class="bi bi-speedometer2 me-2"></i>Inicio</a>
+                        <a href="pedidos.html" class="btn btn-outline-light w-100 text-start mb-3"><i class="bi bi-cart-check me-2"></i>Pedidos</a>
+                        <a href="inventario.html" class="btn btn-outline-light w-100 text-start mb-3"><i class="bi bi-box-seam me-2"></i>Inventario</a>
+                        <a href="ventas.html" class="btn btn-outline-light w-100 text-start mb-3"><i class="bi bi-cash-stack me-2"></i>Ventas</a>
+                        <a href="arqueo.html" class="btn btn-warning w-100 text-start fw-bold mb-3"><i class="bi bi-safe me-2"></i>Arqueo de caja</a>
+                        <a href="reportes.html" class="btn btn-outline-light w-100 text-start mb-3"><i class="bi bi-bar-chart-line me-2"></i>Reportes</a>
+                        <a href="configuracion.html" class="btn btn-outline-light w-100 text-start mb-3"><i class="bi bi-gear me-2"></i>Configuración</a>
+                    </div>
+                </div>
+            </aside>
+            <main class="col-lg-10 py-3 px-lg-4">
+                <nav class="navbar bg-white rounded-4 shadow-sm px-4 py-3">
+                    <h1 class="h2 fw-bold mb-0 color-marca">Arqueo de caja</h1>
+                </nav>
+                <div id="mensajeArqueo" class="alert d-none mt-4" role="alert"></div>
+                <section class="card border-0 shadow rounded-4 mt-4">
+                    <div class="card-header border-0 text-white marca rounded-top-4 py-3">
+                        <h2 class="h5 mb-0"><i class="bi bi-safe me-2"></i>Estado de caja</h2>
+                    </div>
+                    <div class="card-body p-4">
+                        <div id="estadoCaja" class="mb-3 text-secondary">Cargando estado de caja...</div>
+                        <form id="formAbrirCaja" class="row g-3 align-items-end">
+                            <div class="col-md-6">
+                                <label for="efectivoInicial" class="form-label fw-semibold">Efectivo inicial en caja (Bs.)</label>
+                                <input id="efectivoInicial" class="form-control" type="number" min="0" max="99999999.99" step="0.01" value="0.00" required>
+                            </div>
+                            <div class="col-md-6">
+                                <button class="btn text-white marca" type="submit"><i class="bi bi-unlock me-2"></i>Abrir caja</button>
+                            </div>
+                        </form>
+                        <div id="resumenCaja" class="d-none">
+                            <div class="row g-3 text-center mb-4">
+                                <div class="col-md-3"><div class="p-3 bg-light rounded-3"><div class="text-secondary">Efectivo inicial</div><strong id="cajaInicial" class="color-marca fs-5"></strong></div></div>
+                                <div class="col-md-3"><div class="p-3 bg-light rounded-3"><div class="text-secondary">Ingresos en efectivo</div><strong id="cajaVentas" class="color-marca fs-5"></strong></div></div>
+                                <div class="col-md-3"><div class="p-3 bg-light rounded-3"><div class="text-secondary">Egresos</div><strong id="cajaEgresos" class="color-marca fs-5"></strong></div></div>
+                                <div class="col-md-3"><div class="p-3 bg-light rounded-3"><div class="text-secondary">Efectivo esperado</div><strong id="cajaEsperado" class="color-marca fs-5"></strong></div></div>
+                            </div>
+                            <form id="formCerrarCaja" class="row g-3 align-items-end">
+                                <div class="col-md-6">
+                                    <label for="efectivoContado" class="form-label fw-semibold">Efectivo contado al cierre (Bs.)</label>
+                                    <input id="efectivoContado" class="form-control" type="number" min="0" max="99999999.99" step="0.01" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <button class="btn btn-danger" type="submit"><i class="bi bi-lock me-2"></i>Cerrar caja y guardar arqueo</button>
+                                </div>
+                            </form>
+                            <hr class="my-4">
+                            <h3 class="h6 fw-bold color-marca">Registrar egreso de caja</h3>
+                            <form id="formEgreso" class="row g-3 align-items-end">
+                                <div class="col-lg-3">
+                                    <label for="categoriaEgreso" class="form-label">Categoría</label>
+                                    <select id="categoriaEgreso" class="form-select" required>
+                                        <option value="Compra de insumos">Compra de insumos</option>
+                                        <option value="Servicios">Servicios</option>
+                                        <option value="Transporte">Transporte</option>
+                                        <option value="Mantenimiento">Mantenimiento</option>
+                                        <option value="Otros">Otros</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-4">
+                                    <label for="conceptoEgreso" class="form-label">Detalle / concepto</label>
+                                    <input id="conceptoEgreso" class="form-control" type="text" maxlength="160" required placeholder="Ej.: compra de leche y azúcar">
+                                </div>
+                                <div class="col-lg-2">
+                                    <label for="montoEgreso" class="form-label">Monto (Bs.)</label>
+                                    <input id="montoEgreso" class="form-control" type="number" min="0.01" max="99999999.99" step="0.01" required>
+                                </div>
+                                <div class="col-lg-3">
+                                    <button class="btn btn-outline-danger w-100" type="submit"><i class="bi bi-dash-circle me-2"></i>Registrar egreso</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+                <section id="seccionReporte" class="card border-0 shadow rounded-4 mt-4">
+                    <div class="card-header border-0 text-white marca rounded-top-4 py-3">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                            <h2 class="h5 mb-0"><i class="bi bi-calendar3 me-2"></i>Reportes de arqueos</h2>
+                            <button id="btnImprimirReporte" class="btn btn-light btn-sm" type="button"><i class="bi bi-file-earmark-pdf me-2"></i>Imprimir / Guardar PDF</button>
+                        </div>
+                    </div>
+                    <div class="card-body p-4">
+                        <header id="encabezadoImpresion" class="d-none">
+                            <div class="d-flex align-items-center gap-3">
+                                <img src="logo.png" alt="Logo Dulce Vita">
+                                <div>
+                                    <h1>Dulce Vita</h1>
+                                    <p>Informe administrativo de arqueo de caja</p>
+                                </div>
+                            </div>
+                            <div id="periodoImpresion">
+                                <strong id="periodoReporteImpresion"></strong>
+                                <p id="rangoReporteImpresion"></p>
+                                <p id="fechaEmisionImpresion"></p>
+                            </div>
+                        </header>
+                        <form id="formReporte" class="row g-3 align-items-end mb-4">
+                            <div class="col-md-4">
+                                <label for="periodoReporte" class="form-label fw-semibold">Periodo del reporte</label>
+                                <select id="periodoReporte" class="form-select">
+                                    <option value="diario">Diario</option>
+                                    <option value="semanal">Semanal</option>
+                                    <option value="mensual">Mensual</option>
+                                    <option value="anual">Anual</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label id="etiquetaFechaReporte" for="fechaReporte" class="form-label fw-semibold">Fecha del reporte</label>
+                                <input id="fechaReporte" class="form-control" type="date" required>
+                            </div>
+                            <div class="col-md-4">
+                                <button class="btn text-white marca w-100" type="submit"><i class="bi bi-file-earmark-bar-graph me-2"></i>Generar reporte</button>
+                            </div>
+                        </form>
+                        <h3 class="h6 fw-bold color-marca">Arqueos del período</h3>
+                        <div class="table-responsive">
+                            <table id="tablaArqueosDatos" class="table table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr><th>Apertura</th><th>Cierre</th><th>Abrió</th><th>Cerró</th><th>Inicial</th><th>Ingresos efectivo</th><th>Egresos</th><th>Esperado</th><th>Contado</th><th>Diferencia</th></tr>
+                                </thead>
+                                <tbody id="tablaArqueos"><tr><td colspan="10" class="text-center text-secondary py-4">Genera un reporte para consultar los arqueos.</td></tr></tbody>
+                            </table>
+                        </div>
+                        <h3 class="h6 fw-bold color-marca mt-3">Resumen de totales del período</h3>
+                        <div id="resumenTotalesArqueo" class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3 mb-4">
+                            <div class="col">
+                                <div class="card h-100 border-0 bg-light">
+                                    <div class="card-body">
+                                        <h4 class="h6 fw-bold mb-1">Fondo inicial</h4>
+                                        <p class="detalle-resumen small text-secondary mb-2">Suma del efectivo con el que se abrió cada caja.</p>
+                                        <strong id="totalInicialPeriodo" class="monto-resumen fs-5 color-marca">0,00 Bs.</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="card h-100 border-0 bg-light">
+                                    <div class="card-body">
+                                        <h4 class="h6 fw-bold mb-1">Ingresos en efectivo</h4>
+                                        <p class="detalle-resumen small text-secondary mb-2">Ventas en efectivo incluidas en los arqueos.</p>
+                                        <strong id="totalIngresosEfectivoPeriodo" class="monto-resumen fs-5 color-marca">0,00 Bs.</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="card h-100 border-0 bg-light">
+                                    <div class="card-body">
+                                        <h4 class="h6 fw-bold mb-1">Egresos de caja</h4>
+                                        <p class="detalle-resumen small text-secondary mb-2">Suma de los gastos registrados en las cajas.</p>
+                                        <strong id="totalEgresosPeriodo" class="monto-resumen fs-5 color-marca">0,00 Bs.</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="card h-100 border-0 bg-light">
+                                    <div class="card-body">
+                                        <h4 class="h6 fw-bold mb-1">Efectivo esperado</h4>
+                                        <p class="detalle-resumen small text-secondary mb-2">Fondo inicial + ingresos en efectivo − egresos.</p>
+                                        <strong id="totalEsperadoPeriodo" class="monto-resumen fs-5 color-marca">0,00 Bs.</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="card h-100 border-0 bg-light">
+                                    <div class="card-body">
+                                        <h4 class="h6 fw-bold mb-1">Efectivo contado</h4>
+                                        <p id="detalleContadoPeriodo" class="detalle-resumen small text-secondary mb-2">Suma del efectivo contado al cerrar las cajas.</p>
+                                        <strong id="totalContadoPeriodo" class="monto-resumen fs-5 color-marca">0,00 Bs.</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="card h-100 border-0 bg-light">
+                                    <div class="card-body">
+                                        <h4 class="h6 fw-bold mb-1">Diferencia</h4>
+                                        <p id="detalleDiferenciaPeriodo" class="detalle-resumen small text-secondary mb-2">Efectivo contado − efectivo esperado.</p>
+                                        <strong id="totalDiferenciaPeriodo" class="monto-resumen fs-5 color-marca">0,00 Bs.</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h3 class="h6 fw-bold color-marca mt-4">Detalle de ingresos cobrados</h3>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light"><tr><th>Fecha y hora</th><th>N.º pedido</th><th>Cliente</th><th>Tipo de entrega</th><th>Método de pago</th><th>Ingreso</th></tr></thead>
+                                <tbody id="tablaIngresos"><tr><td colspan="6" class="text-center text-secondary py-3">Sin ingresos en este período.</td></tr></tbody>
+                            </table>
+                        </div>
+                        <h3 class="h6 fw-bold color-marca mt-4">Detalle de egresos de caja</h3>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light"><tr><th>Fecha y hora</th><th>Categoría</th><th>Concepto</th><th>Registrado por</th><th>Egreso</th></tr></thead>
+                                <tbody id="tablaEgresos"><tr><td colspan="5" class="text-center text-secondary py-3">Sin egresos en este período.</td></tr></tbody>
+                            </table>
+                        </div>
+                        <div id="firmasImpresion" class="d-none">
+                            <div>Responsable de caja</div>
+                            <div>Revisado por</div>
+                        </div>
+                    </div>
+                </section>
+                <footer class="text-center text-secondary py-4">Dulce Vita - Módulo de arqueo de caja</footer>
+            </main>
+        </div>
+    </div>
+    <script src="arqueo.js?v=6"></script>
+    <script src="auth.js?v=delivery-3"></script>
+    <script src="identidad.js?v=1"></script>
+</body>
+</html>

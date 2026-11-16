@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+<title>
+Dulce Vita | Inicio
+</title>
+<link
+href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+rel="stylesheet">
+<link rel="icon" type="image/png" href="logo.png">
+<link
+href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+rel="stylesheet">
+</head>
+<body style="background:#F8EEDC;">
+<div class="container-fluid">
+<div class="row">
+<div class="col-lg-2 p-0">
+<div
+class="d-flex flex-column vh-100 shadow-lg"
+style="background:#6B2635;">
+<div class="text-center py-4">
+<img
+src="logo.png"
+alt="Logo Dulce Vita"
+width="90"
+class="mb-3">
+<h2 class="text-white fw-bold">
+Dulce Vita
+</h2>
+<p class="text-warning">
+Panel Administrativo
+</p>
+</div>
+<hr class="border-light">
+<div class="px-3">
+<a
+href="dashboard.html"
+class="btn btn-warning w-100 text-start fw-bold mb-3">
+<i class="bi bi-speedometer2 me-2"></i>
+Inicio
+</a>
+</a>
+<a
+href="pedidos.html"
+class="btn btn-outline-light w-100 text-start mb-3">
+<i class="bi bi-cart-check me-2"></i>
+Pedidos
+</a>
+<a href="inventario.html" class="btn btn-outline-light w-100 text-start mb-3">
+<i class="bi bi-box-seam me-2"></i>
+Inventario
+</a>
+<a
+href="ventas.html"
+class="btn btn-outline-light w-100 text-start mb-3">
+<i class="bi bi-cash-stack me-2"></i>
+Ventas
+</a>
+<a
+href="arqueo.html"
+class="btn btn-outline-light w-100 text-start mb-3">
+<i class="bi bi-safe me-2"></i>
+Arqueo de caja
+</a>
+<a
+href="reportes.html"
+class="btn btn-outline-light w-100 text-start mb-3">
+<i class="bi bi-bar-chart-line me-2"></i>
+Reportes
+</a>
+<a
+href="usuarios.html"
+class="btn btn-outline-light w-100 text-start mb-3">
+<i class="bi bi-people me-2"></i>
+Usuarios
+</a>
+<a
+href="configuracion.html"
+class="btn btn-outline-light w-100 text-start mb-3">
+<i class="bi bi-gear me-2"></i>
+Configuración
+</a>
+
+</div>
+</div>
+</div>
+<div class="col-lg-10">
+<nav
+class="navbar bg-white rounded-4 shadow-sm mt-3 px-4 py-3">
+<div>
+<h2
+class="fw-bold mb-0"
+style="color:#6B2635;">
+Inicio
+</h2>
+</div>
+
+</nav>
+<div class="row g-4 mt-2">
+<div class="col-lg-3">
+<div class="card border-0 shadow rounded-4">
+<div class="card-body text-center">
+<i
+class="bi bi-cash-stack"
+style="font-size:45px;color:#6B2635;"></i>
+<h6 class="mt-3">
+Monto de Operaciones
+</h6>
+<h2
+id="dashboardIngresos"
+style="color:#6B2635;">
+Cargando...
+</h2>
+</div>
+</div>
+</div>
+<div class="col-lg-3">
+<div class="card border-0 shadow rounded-4">
+<div class="card-body text-center">
+<i
+class="bi bi-cart-check-fill"
+style="font-size:45px;color:#C9A45C;"></i>
+<h6 class="mt-3">
+Pedidos Pendientes
+</h6>
+<h2
+id="dashboardPedidos"
+style="color:#6B2635;">
+Cargando...
+</h2>
+</div>
+</div>
+</div>
+<div class="col-lg-3">
+<div class="card border-0 shadow rounded-4">
+<div class="card-body text-center">
+<i
+class="bi bi-box-seam-fill"
+style="font-size:45px;color:#6B2635;"></i>
+<h6 class="mt-3">
+Productos
+</h6>
+<h2
+id="dashboardProductos"
+style="color:#6B2635;">
+Cargando...
+</h2>
+</div>
+</div>
+</div>
+<div class="col-lg-3">
+<div class="card border-0 shadow rounded-4">
+<div class="card-body text-center">
+<i class="bi bi-check2-circle" style="font-size:45px;color:#C9A45C;"></i>
+<h6 class="mt-3">Operaciones registradas</h6>
+<h2 id="operacionesDashboard" style="color:#6B2635;">Cargando...</h2>
+</div>
+</div>
+</div>
+<div class="col-lg-3">
+<div class="card border-0 shadow rounded-4">
+<div class="card-body text-center">
+<i
+class="bi bi-calendar-check-fill"
+style="font-size:45px;color:#6B2635;"></i>
+<h6 class="mt-3">
+Operaciones de Hoy
+</h6>
+<h2
+id="ventasHoy"
+style="color:#6B2635;">
+Cargando...
+</h2>
+</div>
+</div>
+</div>
+<div class="col-lg-3">
+<div class="card border-0 shadow rounded-4">
+<div class="card-body text-center">
+<i
+class="bi bi-x-octagon-fill"
+style="font-size:45px;color:#6B2635;"></i>
+<h6 class="mt-3">
+Productos Agotados
+</h6>
+<h2
+id="productosAgotados"
+style="color:#6B2635;">
+Cargando...
+</h2>
+</div>
+</div>
+</div>
+<div class="col-lg-3">
+<div class="card border-0 shadow rounded-4">
+<div class="card-body text-center">
+<i
+class="bi bi-graph-up-arrow"
+style="font-size:45px;color:#C9A45C;"></i>
+<h6 class="mt-3">
+Operaciones del Mes
+</h6>
+<h2
+id="ventasMesDashboard"
+style="color:#6B2635;">
+Cargando...
+</h2>
+</div>
+</div>
+</div>
+</div>
+<div class="row mt-4">
+<div class="col-lg-6 mb-4">
+<div class="card border-0 shadow rounded-4">
+<div
+class="card-header"
+style="background:#6B2635;">
+<h5 class="text-white mb-0">
+<i class="bi bi-clock-history me-2"></i>
+Últimas Operaciones
+</h5>
+</div>
+<div class="card-body">
+<div class="table-responsive">
+<table
+class="table table-hover">
+<thead style="background:#F8EEDC;">
+<tr>
+<th>Cliente</th>
+<th>Total</th>
+<th>Estado</th>
+</tr>
+</thead>
+<tbody id="tablaUltimasVentas">
+<tr>
+<td colspan="3" class="text-center py-4">
+Consultando transacciones...
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="col-lg-6 mb-4">
+<div class="card border-0 shadow rounded-4">
+<div
+class="card-header"
+style="background:#6B2635;">
+<h5 class="text-white mb-0">
+<i class="bi bi-bag-check-fill me-2"></i>
+Últimos Pedidos
+</h5>
+</div>
+<div class="card-body">
+<div class="table-responsive">
+<table
+class="table table-hover">
+<thead style="background:#F8EEDC;">
+<tr>
+<th>Cliente</th>
+<th>Total</th>
+<th>Estado</th>
+</tr>
+</thead>
+<tbody id="tablaUltimosPedidos">
+<tr>
+<td colspan="3" class="text-center py-4">
+Consultando pedidos...
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="row mt-4">
+<div class="col-lg-6 mb-4">
+<div class="card border-0 shadow rounded-4">
+<div
+class="card-header"
+style="background:#6B2635;">
+<h5 class="text-white mb-0">
+<i class="bi bi-trophy-fill me-2"></i>
+Productos Más Vendidos
+</h5>
+</div>
+<div class="card-body">
+<div class="table-responsive">
+<table class="table table-hover align-middle">
+<thead style="background:#F8EEDC;">
+<tr>
+<th>Producto</th>
+<th>Cantidad</th>
+<th>Total</th>
+</tr>
+</thead>
+<tbody id="tablaProductosTop">
+<tr>
+<td colspan="3" class="text-center py-4">
+Consultando productos...
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="card border-0 shadow rounded-4">
+<div
+class="card-header"
+style="background:#6B2635;">
+<h4 class="text-white mb-0">
+<i class="bi bi-lightning-charge-fill me-2"></i>
+Accesos Rápidos
+</h4>
+</div>
+<div class="card-body">
+<div class="row g-4">
+<div class="col-lg-2 col-md-4">
+<a
+href="pedidos.html"
+class="btn w-100 py-4"
+style="background:#874657;color:white;">
+<i class="bi bi-cart-check-fill fs-1 d-block mb-2"></i>
+Pedidos
+</a>
+</div>
+<div class="col-lg-2 col-md-4">
+<a
+href="inventario.html"
+class="btn w-100 py-4"
+style="background:#6B2635;color:white;">
+<i class="bi bi-box-seam fs-1 d-block mb-2"></i>
+Inventario
+</a>
+</div>
+<div class="col-lg-2 col-md-4">
+<a
+href="ventas.html"
+class="btn w-100 py-4"
+style="background:#9A6745;color:white;">
+<i class="bi bi-cash-stack fs-1 d-block mb-2"></i>
+Ventas
+</a>
+</div>
+<div class="col-lg-2 col-md-4">
+<a
+href="reportes.html"
+class="btn w-100 py-4"
+style="background:#C9A45C;color:#38241A;">
+<i class="bi bi-bar-chart-fill fs-1 d-block mb-2"></i>
+Reportes
+</a>
+</div>
+<div class="col-lg-2 col-md-4">
+<a href="configuracion.html" class="btn w-100 py-4" style="background:#6B2635;color:white;">
+<i class="bi bi-gear-fill fs-1 d-block mb-2"></i>
+Configuración
+</a>
+</div>
+
+<div class="col-lg-2 col-md-4">
+<a
+ href="la polar/index.html?modo=administrador"
+class="btn w-100 py-4"
+style="background:#EBD8BA;color:#38241A;">
+<i class="bi bi-house-fill fs-1 d-block mb-2"></i>
+Sitio Web
+</a>
+</div>
+</div>
+</div>
+</div>
+<div class="card border-0 shadow rounded-4 mt-4">
+<div
+class="card-header"
+style="background:#6B2635;">
+<h4 class="text-white mb-0">
+<i class="bi bi-bell-fill me-2"></i>
+Notificaciones del Sistema
+</h4>
+</div>
+<div
+class="card-body"
+id="panelNotificaciones">
+<div class="alert alert-success mb-3">
+<i class="bi bi-check-circle-fill me-2"></i>
+El sistema está funcionando correctamente.
+</div>
+</div>
+</div>
+<footer class="text-center py-4 mt-4">
+<hr>
+<p
+class="fw-bold mb-1"
+style="color:#6B2635;">
+Dulce Vita - Panel Administrativo
+</p>
+<p
+class="text-secondary mb-0">
+Inicio © 2026
+</p>
+</footer>
+</div>
+</div>
+</div>
+
+<script src="auth.js?v=delivery-3"></script>
+<script src="productos.js?v=stock-sync-2"></script>
+<script src="clientes.js"></script>
+<script src="dashboard.js?v=dulce-vita-resumen-3"></script>
+<script src="identidad.js?v=1"></script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Dulce Vita | Inventario</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        body{background:#F8EEDC}
+        .marca{background:#6B2635}
+        .color-marca{color:#6B2635}
+        .vh-100{min-height:100vh}
+        @media(max-width:991.98px){.vh-100{min-height:auto}}
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <aside class="col-lg-2 p-0">
+            <div class="d-flex flex-column vh-100 shadow-lg" style="background:#6B2635;">
+                <div class="text-center py-4">
+                    <img src="logo.png" alt="Logo Dulce Vita" width="90" class="mb-3">
+                    <h2 class="text-white fw-bold">Dulce Vita</h2>
+                    <p class="text-warning">Panel Administrativo</p>
+                </div>
+                <hr class="border-light">
+                <nav class="px-3">
+                    <a href="dashboard.html" class="btn btn-outline-light w-100 text-start mb-3"><i class="bi bi-speedometer2 me-2"></i>Inicio</a>
+                    <a href="pedidos.html" class="btn btn-outline-light w-100 text-start mb-3"><i class="bi bi-cart-check me-2"></i>Pedidos</a>
+                    <a href="inventario.html" class="btn btn-warning w-100 text-start fw-bold mb-3"><i class="bi bi-box-seam me-2"></i>Inventario</a>
+                    <a href="ventas.html" class="btn btn-outline-light w-100 text-start mb-3"><i class="bi bi-cash-stack me-2"></i>Ventas</a>
+                    <a href="arqueo.html" class="btn btn-outline-light w-100 text-start mb-3"><i class="bi bi-safe me-2"></i>Arqueo de caja</a>
+                    <a href="reportes.html" class="btn btn-outline-light w-100 text-start mb-3"><i class="bi bi-bar-chart-line me-2"></i>Reportes</a>
+                    <a href="usuarios.html" class="btn btn-outline-light w-100 text-start mb-3"><i class="bi bi-people me-2"></i>Usuarios</a>
+                    <a href="configuracion.html" class="btn btn-outline-light w-100 text-start mb-3"><i class="bi bi-gear me-2"></i>Configuración</a>
+                </nav>
+            </div>
+        </aside>
+        <main class="col-lg-10 px-3 px-lg-4">
+            <nav class="navbar bg-white rounded-4 shadow-sm mt-3 px-4 py-3">
+                <h1 class="h2 fw-bold mb-0 color-marca">Inventario y productos</h1>
+            </nav>
+
+            <div id="mensajeInventario" class="alert mt-3" role="alert" hidden></div>
+            <div class="alert alert-warning mt-3 mb-0" role="note">
+                El stock que ya existía al activar este módulo quedó como inventario inicial sin vencimiento conocido. Usa <strong>Completar fechas</strong> para registrar las fechas reales de esos lotes.
+            </div>
+
+            <div class="row g-3 mt-1">
+                <div class="col-md-4">
+                    <div class="card border-0 shadow rounded-4 h-100"><div class="card-body">
+                        <div class="text-secondary">Productos activos</div>
+                        <div id="cantidadProductosInventario" class="display-6 fw-bold color-marca">0</div>
+                    </div></div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-0 shadow rounded-4 h-100"><div class="card-body">
+                        <div class="text-secondary">Unidades disponibles para venta</div>
+                        <div id="unidadesInventario" class="display-6 fw-bold color-marca">0</div>
+                    </div></div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-0 shadow rounded-4 h-100"><div class="card-body">
+                        <div class="text-secondary">Lotes vencidos / por vencer</div>
+                        <div id="lotesAlertaInventario" class="display-6 fw-bold text-danger">0</div>
+                        <small class="text-secondary">Se avisa cuando faltan 30 días o menos.</small>
+                    </div></div>
+                </div>
+            </div>
+
+            <div class="row g-4 mt-1">
+                <section class="col-xl-6">
+                    <div class="card border-0 shadow rounded-4 h-100">
+                        <div class="card-header marca text-white rounded-top-4 py-3">
+                            <h2 class="h5 mb-0"><i class="bi bi-plus-square me-2"></i>Registrar producto</h2>
+                        </div>
+                        <div class="card-body">
+                            <form id="formProductoInventario" class="row g-3">
+                                <input id="productoInventarioId" type="hidden">
+                                <div class="col-md-6">
+                                    <label for="nombreProductoInventario" class="form-label fw-semibold">Nombre</label>
+                                    <input id="nombreProductoInventario" class="form-control" maxlength="120" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="categoriaProductoInventario" class="form-label fw-semibold">Categoría</label>
+                                    <select id="categoriaProductoInventario" class="form-select" required>
+                                        <option value="Tortas">Tortas</option>
+                                        <option value="Espressos">Espressos</option>
+                                        <option value="Frappes">Frappes</option>
+                                        <option value="Bubbas">Bubbas</option>
+                                        <option value="Crepes">Crepes</option>
+                                        <option value="Pasteleria">Pastelería</option>
+                                        <option value="Paninis">Paninis</option>
+                                        <option value="Combos">Combos</option>
+                                        <option value="Otros">Otros</option>
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <label for="descripcionProductoInventario" class="form-label fw-semibold">Descripción</label>
+                                    <input id="descripcionProductoInventario" class="form-control" maxlength="255">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="precioProductoInventario" class="form-label fw-semibold">Precio de venta (Bs.)</label>
+                                    <input id="precioProductoInventario" type="number" class="form-control" min="0" step="0.01" required>
+                                </div>
+                                <div class="col-12 d-flex gap-2">
+                                    <button id="guardarProductoInventario" type="submit" class="btn text-white marca"><i class="bi bi-check2-circle me-1"></i>Guardar producto</button>
+                                    <button id="cancelarEdicionProducto" type="button" class="btn btn-outline-secondary" hidden>Cancelar edición</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="col-xl-6">
+                    <div class="card border-0 shadow rounded-4 h-100">
+                        <div class="card-header marca text-white rounded-top-4 py-3">
+                            <h2 class="h5 mb-0"><i class="bi bi-box-arrow-in-down me-2"></i>Registrar ingreso de stock</h2>
+                        </div>
+                        <div class="card-body">
+                            <form id="formEntradaInventario" class="row g-3">
+                                <div class="col-12">
+                                    <label for="productoEntradaInventario" class="form-label fw-semibold">Producto</label>
+                                    <select id="productoEntradaInventario" class="form-select" required>
+                                        <option value="">Selecciona un producto</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="cantidadEntradaInventario" class="form-label fw-semibold">Cantidad ingresada</label>
+                                    <input id="cantidadEntradaInventario" type="number" class="form-control" min="1" max="100000" step="1" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="fechaIngresoInventario" class="form-label fw-semibold">Fecha de ingreso</label>
+                                    <input id="fechaIngresoInventario" type="date" class="form-control" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="fechaVencimientoInventario" class="form-label fw-semibold">Fecha de vencimiento</label>
+                                    <input id="fechaVencimientoInventario" type="date" class="form-control" required>
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" class="btn text-white marca"><i class="bi bi-save me-1"></i>Guardar entrada</button>
+                                    <small class="d-block text-secondary mt-2">Cada ingreso se guarda como un lote separado. Los pedidos descuentan primero el lote que vence antes.</small>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <section class="card border-0 shadow rounded-4 mt-4">
+                <div class="card-header marca text-white rounded-top-4 py-3">
+                    <h2 class="h5 mb-0"><i class="bi bi-list-ul me-2"></i>Productos registrados</h2>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light"><tr><th>Producto</th><th>Categoría</th><th>Precio</th><th>Stock vendible</th><th>Acción</th></tr></thead>
+                        <tbody id="tablaProductosInventario"><tr><td colspan="5" class="text-center text-secondary py-4">Cargando productos...</td></tr></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="card border-0 shadow rounded-4 mt-4">
+                <div class="card-header marca text-white rounded-top-4 py-3">
+                    <h2 class="h5 mb-0"><i class="bi bi-hourglass-split me-2"></i>Lotes disponibles y vencimientos</h2>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light"><tr><th>Producto / lote</th><th>Ingreso</th><th>Vencimiento</th><th>Stock disponible</th><th>Estado</th><th>Acción</th></tr></thead>
+                        <tbody id="tablaLotesInventario"><tr><td colspan="6" class="text-center text-secondary py-4">Cargando lotes...</td></tr></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="card border-0 shadow rounded-4 mt-4 mb-4">
+                <div class="card-header marca text-white rounded-top-4 py-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <h2 class="h5 mb-0"><i class="bi bi-arrow-left-right me-2"></i>Movimientos recientes</h2>
+                    <a href="reportes.html" class="btn btn-light btn-sm">Ver informe completo</a>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light"><tr><th>Fecha</th><th>Movimiento</th><th>Producto</th><th>Cantidad</th><th>Motivo / observación</th><th>Registrado por</th></tr></thead>
+                        <tbody id="tablaMovimientosInventario"><tr><td colspan="6" class="text-center text-secondary py-4">Cargando movimientos...</td></tr></tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+</div>
+
+<div class="modal fade" id="modalFechasLoteInventario" tabindex="-1" aria-labelledby="tituloFechasLoteInventario" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content border-0 rounded-4 shadow">
+            <div class="modal-header marca text-white">
+                <h2 id="tituloFechasLoteInventario" class="modal-title h5">Completar fechas del lote inicial</h2>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <form id="formFechasLoteInventario">
+                <div class="modal-body">
+                    <input id="loteFechasInventario" type="hidden">
+                    <p id="detalleFechasLote" class="text-secondary"></p>
+                    <label for="fechaIngresoLoteInventario" class="form-label fw-semibold">Fecha real de ingreso</label>
+                    <input id="fechaIngresoLoteInventario" type="date" class="form-control mb-3" required>
+                    <label for="fechaVencimientoLoteInventario" class="form-label fw-semibold">Fecha de vencimiento</label>
+                    <input id="fechaVencimientoLoteInventario" type="date" class="form-control" required>
+                    <div class="form-text">Esto actualiza las fechas del lote inicial; no agrega ni descuenta unidades.</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn text-white marca">Guardar fechas</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalBajaInventario" tabindex="-1" aria-labelledby="tituloBajaInventario" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content border-0 rounded-4 shadow">
+            <div class="modal-header marca text-white">
+                <h2 id="tituloBajaInventario" class="modal-title h5">Dar de baja stock</h2>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <form id="formBajaInventario">
+                <div class="modal-body">
+                    <input id="loteBajaInventario" type="hidden">
+                    <p id="detalleLoteBaja" class="text-secondary"></p>
+                    <label for="cantidadBajaInventario" class="form-label fw-semibold">Cantidad a dar de baja</label>
+                    <input id="cantidadBajaInventario" type="number" class="form-control mb-3" min="1" step="1" required>
+                    <label for="motivoBajaInventario" class="form-label fw-semibold">Motivo</label>
+                    <select id="motivoBajaInventario" class="form-select mb-3" required>
+                        <option value="Vencido">Vencido</option>
+                        <option value="Próximo a vencer">Próximo a vencer</option>
+                        <option value="Dañado">Dañado</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                    <label for="observacionBajaInventario" class="form-label fw-semibold">Observación (opcional)</label>
+                    <textarea id="observacionBajaInventario" class="form-control" maxlength="255" rows="2"></textarea>
+                    <div class="form-text">La baja se resta del stock y queda registrada en el historial.</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Confirmar baja</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+<script src="gestion_inventario.js?v=3"></script>
+<script src="auth.js?v=delivery-3"></script>
+<script src="identidad.js?v=1"></script>
+</body>
+</html>

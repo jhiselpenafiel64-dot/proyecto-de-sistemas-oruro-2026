@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-labelledby="title desc">
+  <title id="title">Dulce Vita</title>
+  <desc id="desc">Logo de Dulce Vita</desc>
+  <rect width="200" height="200" fill="#ed1c24"/>
+  <text x="100" y="98" text-anchor="middle" fill="#fff" font-size="29" font-family="cursive" font-style="italic" font-weight="700">Dulce</text>
+  <text x="100" y="139" text-anchor="middle" fill="#fff" font-size="36" font-family="cursive" font-style="italic" font-weight="700">Vita</text>
+</svg>
