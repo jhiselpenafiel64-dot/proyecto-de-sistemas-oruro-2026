@@ -1985,7 +1985,7 @@ try {
         $stmt->execute([$clienteId, $currentUser['id'], $total]);
         $pedidoId = $stmt->fetchColumn();
         $numeroFactura = 'PEND-' . str_pad((string) $pedidoId, 8, '0', STR_PAD_LEFT);
-        $stmt = $pdo->prepare("INSERT INTO facturas (pedido_id, numero, nombre_fiscal, nit_ci, direccion, total, estado_emision) VALUES (?, ?, ?, ?, ?, ?, 'Pendiente SIAT')");
+        $stmt = $pdo->prepare("INSERT INTO facturas (pedido_id, numero, nombre_fiscal, nit_ci, direccion, total, estado_emision) VALUES (?, ?, ?, ?, ?, ?, 'Pendiente SIAT') RETURNING id");
         $stmt->execute([$pedidoId, $numeroFactura, $nombreFiscal, $nitCi, $direccionFiscal !== '' ? $direccionFiscal : null, $total]);
         $facturaId = $stmt->fetchColumn();
         $stmt = $pdo->prepare("INSERT INTO pagos (pedido_id, factura_id, metodo, monto, estado, pagado_en) VALUES (?, ?, ?, ?, 'Pagado', CURRENT_TIMESTAMP)");
