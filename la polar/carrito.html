@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Dulce Vita | Carrito</title>
+    <link rel="icon" type="image/png" href="../logo.png?v=dulce-vita-2">
+    <link rel="stylesheet" href="style.css?v=contacto-global-1">
+    <link rel="stylesheet" href="responsive.css?v=contacto-global-1">
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <div class="logo-container">
+                <img src="../logo.png?v=dulce-vita-2" alt="Logo Dulce Vita">
+                <div class="logo-identidad">
+                    <div class="logo-text">Dulce Vita</div>
+                    <small class="logo-lema" data-empresa-lema></small>
+                </div>
+            </div>
+            <button class="menu-btn"id="menuBtn">☰</button>
+            <nav class="menu"id="menu">
+                <a href="index.html">Inicio</a>
+                <a href="catalogo.html">Catálogo</a>
+                <a href="carrito.html">Carrito</a>
+                <a href="index.html#visitanos">Contacto</a>
+                <a href="cuenta.html">Mi cuenta</a>
+            </nav>
+        </div>
+    </header>
+    <section>
+        <h1 class="titulo">Carrito de compra</h1>
+        <div class="carrito-contenedor"id="carrito"></div>
+            <div class="total-carrito">
+                <h2>Total:</h2>
+                <h2 id="total">0 Bs.</h2>
+            </div>
+        <form id="formularioPedidoWeb" class="formulario-pedido">
+            <h2>Confirmar pedido</h2>
+            <p id="estadoCuentaPedido" role="status">Comprobando tu cuenta...</p>
+            <div class="campo">
+                <label for="facturaNombreWeb">Nombre o razón social</label>
+                <input id="facturaNombreWeb" type="text" maxlength="120" aria-describedby="facturaNombreWebAyuda" required>
+                <small id="facturaNombreWebAyuda" class="form-text text-muted">Solo letras, espacios, apóstrofes, puntos y guiones.</small>
+            </div>
+            <div class="campo">
+                <label for="facturaNitWeb">NIT / CI</label>
+                <input id="facturaNitWeb" type="text" maxlength="30" inputmode="numeric" aria-describedby="facturaNitWebAyuda" required>
+                <small id="facturaNitWebAyuda" class="form-text text-muted">Solo números y guiones.</small>
+            </div>
+            <div class="campo">
+                <label for="facturaDireccionWeb">Dirección (opcional)</label>
+                <input id="facturaDireccionWeb" type="text">
+            </div>
+            <div class="campo">
+                <label for="tipoEntregaWeb">Forma de entrega</label>
+                <select id="tipoEntregaWeb" required>
+                    <option value="Retiro">Retiro en tienda</option>
+                    <option value="Delivery">Delivery</option>
+                </select>
+                <p id="avisoDeliveryWeb" role="status"></p>
+            </div>
+            <div id="camposDeliveryWeb" hidden>
+                <div class="campo">
+                    <label for="zonaDeliveryWeb">Zona de entrega</label>
+                    <select id="zonaDeliveryWeb">
+                        <option value="">Selecciona una zona</option>
+                    </select>
+                </div>
+                <div class="campo">
+                    <label for="direccionDeliveryWeb">Dirección de entrega</label>
+                    <input id="direccionDeliveryWeb" type="text" maxlength="255" autocomplete="street-address">
+                </div>
+            </div>
+            <div class="campo">
+                <label for="metodoPagoWeb">Método de pago</label>
+                <select id="metodoPagoWeb" required>
+                    <option value="">Selecciona un método</option>
+                    <option value="Efectivo">Efectivo</option>
+                    <option value="QR">QR</option>
+                </select>
+            </div>
+            <p id="avisoQrWeb" role="status"></p>
+            <div id="qrPagoWeb" hidden>
+                <p>Escanea el QR de la tienda y adjunta el comprobante de la transferencia. La tienda verificará el código de transacción antes de confirmar el pago.</p>
+                <img id="imagenQrPagoWeb" alt="Código QR de pago de Dulce Vita" style="max-width:260px;width:100%;height:auto">
+                <div class="campo">
+                    <label for="comprobantePagoQrWeb">Comprobante de pago QR (JPG, PNG, WebP o PDF; máximo 5 MB)</label>
+                    <input id="comprobantePagoQrWeb" type="file" accept="image/jpeg,image/png,image/webp,application/pdf">
+                </div>
+            </div>
+            <p id="totalPedidoWeb" aria-live="polite"></p>
+            <button class="btn" type="submit">Guardar pedido y continuar al pago</button>
+            <p id="mensajePedidoWeb" role="status"></p>
+        </form>
+    </section>
+    <footer class="footer">
+        <div class="footer-contenido">
+            <div>
+                <h3>Dulce Vita</h3>
+                <p>Café y pastelería artesanal.</p>
+            </div>
+            <div>
+                <h3>Atención</h3>
+                <p>Lunes a Domingo</p>
+                <p>10:00 - 23:30</p>
+            </div>
+            <div>
+                <h3>Ubicación</h3>
+                <p>6 de Octubre, Parque de la Union Oruro, Bolivia</p>
+            </div>
+            <div>
+                <h3>Contacto</h3>
+                <p data-empresa-telefono></p>
+                <div class="footer-redes-sociales" data-empresa-redes hidden></div>
+                <p data-empresa-correo></p>
+            </div>
+        </div>
+        <div class="footer-final">© 2026 Ester & Jhisel</div>
+    </footer>
+    <script src="productos.js?v=stock-sync-2"></script>
+    <script src="carrito.js"></script>
+    <script src="pedido.js?v=validacion-datos-pedido-1"></script>
+    <script src="menu.js?v=dulce-vita-3"></script>
+    <script src="../identidad.js?v=3"></script>
+</body>
+</html>

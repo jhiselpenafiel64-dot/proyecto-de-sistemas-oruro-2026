@@ -1,0 +1,959 @@
+.cuenta-pagina{
+    min-height:80vh;
+    padding:80px 20px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:#f5eee6;
+}
+
+.cuenta-contenedor{
+    width:100%;
+    max-width:520px;
+    background:#fff;
+    padding:45px;
+    border-radius:25px;
+    box-shadow:0 15px 40px rgba(60,35,25,.12);
+}
+
+.cuenta-titulo{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.cuenta-titulo h1{
+    color:var(--borgona);
+    font-family:'Cormorant Garamond',serif;
+    font-size:50px;
+    margin-bottom:10px;
+}
+
+.cuenta-titulo p{
+    color:#5b463b;
+    font-size:16px;
+    line-height:1.6;
+}
+
+.cuenta-formulario h2,
+.cuenta-activa h2{
+    text-align:center;
+    color:var(--borgona);
+    font-size:30px;
+    margin-bottom:25px;
+}
+
+.campo{
+    margin-bottom:20px;
+}
+.campo small{
+    display:block;
+    margin-top:6px;
+    color:#6b625d;
+    font-size:12px;
+    line-height:1.45;
+}
+
+.campo label{
+    display:block;
+    margin-bottom:8px;
+    color:#4a3328;
+    font-weight:600;
+    font-size:15px;
+}
+
+.campo input{
+    width:100%;
+    padding:14px 16px;
+    border:1px solid #d6c5b8;
+    border-radius:12px;
+    outline:none;
+    font-family:'Montserrat',sans-serif;
+    font-size:15px;
+    background:#fff;
+    box-sizing:border-box;
+    transition:.3s;
+}
+
+.campo input:focus{
+    border-color:#7a3045;
+    box-shadow:0 0 0 3px rgba(122,48,69,.1);
+}
+
+.cuenta-btn{
+    width:100%;
+    margin-top:8px;
+}
+
+.google-registro{
+    margin-top:22px;
+    text-align:center;
+}
+
+.google-registro p{
+    margin:0 0 12px;
+    color:#5b463b;
+    font-size:14px;
+}
+
+.google-registro > p:first-child{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.google-registro > p:first-child::before,
+.google-registro > p:first-child::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:#d6c5b8;
+}
+
+#googleSigninButton{
+    display:flex;
+    justify-content:center;
+    min-height:40px;
+}
+
+#googleSigninButton[hidden],
+#googleEstado[hidden]{
+    display:none;
+}
+
+.google-registro-btn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+    width:100%;
+    min-height:46px;
+    padding:10px 16px;
+    border:1px solid #c9c9c9;
+    border-radius:8px;
+    background:#fff;
+    color:#333;
+    font-family:'Montserrat',sans-serif;
+    font-size:14px;
+    font-weight:600;
+    cursor:pointer;
+}
+
+.google-registro-btn:hover{
+    background:#f8f8f8;
+}
+
+.google-marca{
+    color:#4285f4;
+    font-family:Arial,sans-serif;
+    font-size:20px;
+    font-weight:700;
+}
+
+.google-estado{
+    margin:10px 0 0;
+    color:#7a2630;
+    font-size:14px;
+    line-height:1.5;
+}
+
+.acceso-admin-cuenta{
+    margin-top:30px;
+    padding-top:20px;
+    border-top:1px solid #d6c5b8;
+    text-align:center;
+}
+
+.acceso-admin-cuenta > p{
+    margin:0 0 6px;
+    color:#5b463b;
+    font-size:13px;
+}
+
+.acceso-admin-enlace,
+.acceso-admin-cancelar{
+    border:0;
+    padding:5px;
+    background:none;
+    color:#7a3045;
+    font-family:'Montserrat',sans-serif;
+    font-size:14px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.acceso-admin-enlace:hover,
+.acceso-admin-cancelar:hover{
+    text-decoration:underline;
+}
+
+.acceso-admin-cancelar{
+    margin-top:10px;
+    color:#5b463b;
+    font-weight:600;
+}
+
+.cambiar-formulario{
+    text-align:center;
+    margin-top:25px;
+    color:#5b463b;
+    font-size:14px;
+}
+
+.cambiar-formulario button{
+    border:none;
+    background:none;
+    color:#7a3045;
+    font-weight:700;
+    cursor:pointer;
+    font-size:14px;
+}
+
+.cambiar-formulario button:hover{
+    text-decoration:underline;
+}
+
+.oculto{
+    display:none;
+}
+
+.mensaje{
+    display:none;
+    padding:13px 15px;
+    margin-bottom:20px;
+    border-radius:10px;
+    text-align:center;
+    font-size:14px;
+}
+
+.mensaje.exito{
+    display:block;
+    background:#e8f3e9;
+    color:#285c31;
+}
+
+.mensaje.error{
+    display:block;
+    background:#f7e4e4;
+    color:#7a2630;
+}
+
+.cuenta-activa{
+    text-align:center;
+}
+
+.cuenta-icono{
+    width:85px;
+    height:85px;
+    margin:0 auto 20px;
+    border-radius:50%;
+    background:#7a3045;
+    color:#fff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:25px;
+    font-weight:700;
+}
+
+.cuenta-activa h2{
+    margin-bottom:8px;
+}
+
+#nombreUsuario{
+    color:#4a3328;
+    font-size:20px;
+    font-weight:600;
+    margin-bottom:25px;
+}
+
+.datos-cuenta{
+    background:#f5eee6;
+    padding:18px;
+    border-radius:12px;
+    margin-bottom:25px;
+    text-align:left;
+}
+
+.datos-cuenta p{
+    margin:0;
+    color:#5b463b;
+    word-break:break-word;
+}
+.pedidos-cliente{
+    margin:25px 0;
+    padding-top:20px;
+    border-top:1px solid #d6c5b8;
+    text-align:left;
+}
+.pedidos-cliente h2{
+    text-align:left;
+}
+.aviso-pedidos:not(:empty){
+    padding:14px;
+    background:#e8f3e9;
+    border-left:4px solid #285c31;
+    color:#285c31;
+}
+.pedido-cliente{
+    margin:14px 0;
+    padding:14px;
+    border:1px solid #d6c5b8;
+    border-radius:8px;
+    background:#fff;
+}
+.pedido-cliente p{
+    margin:5px 0;
+    color:#4a3328;
+}
+.pedido-pago-verificado{color:#198754}
+.pedido-pago-pendiente{color:#b58100}
+.pedido-listo{
+    padding:10px;
+    background:#e8f3e9;
+    color:#285c31;
+    font-weight:700;
+}
+.pedido-cancelar-cliente{
+    margin-top:12px;
+    padding:9px 13px;
+    border:1px solid #b42318;
+    border-radius:8px;
+    background:#fff;
+    color:#b42318;
+    font:600 13px 'Montserrat',sans-serif;
+    cursor:pointer;
+}
+.pedido-cancelar-cliente:hover:not(:disabled){
+    background:#b42318;
+    color:#fff;
+}
+.pedido-cancelar-cliente:disabled{
+    opacity:.6;
+    cursor:wait;
+}
+
+.notificaciones-cliente{
+    position:relative;
+    margin:18px 0;
+    text-align:left;
+}
+.boton-notificaciones{
+    display:inline-flex;
+    align-items:center;
+    gap:9px;
+    min-height:44px;
+    padding:9px 14px;
+    border:1px solid #d6c5b8;
+    border-radius:12px;
+    background:#fff;
+    color:#4a3328;
+    font:inherit;
+    font-weight:700;
+    cursor:pointer;
+}
+.boton-notificaciones:hover,.boton-notificaciones:focus-visible{
+    border-color:#7a3045;
+    color:#6b2635;
+}
+.icono-campana{
+    width:21px;
+    height:21px;
+    fill:none;
+    stroke:currentColor;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+    stroke-width:1.8;
+}
+.contador-notificaciones{
+    display:inline-grid;
+    min-width:21px;
+    height:21px;
+    place-items:center;
+    padding:0 5px;
+    border-radius:999px;
+    background:#b42318;
+    color:#fff;
+    font-size:12px;
+}
+.panel-notificaciones-cliente{
+    margin-top:10px;
+    padding:16px;
+    border:1px solid #d6c5b8;
+    border-radius:12px;
+    background:#fff;
+}
+.panel-notificaciones-cliente h3{
+    margin:0 0 10px;
+    color:#6b2635;
+    font-size:20px;
+}
+.notificacion-cliente{
+    display:block;
+    width:100%;
+    margin:8px 0;
+    padding:12px;
+    border:1px solid #e0d4cb;
+    border-radius:9px;
+    background:#fff;
+    color:#4a3328;
+    text-align:left;
+    font:inherit;
+    cursor:pointer;
+}
+.notificacion-cliente-no-leida{
+    border-left:4px solid #6b2635;
+    background:#fbf5ed;
+}
+.notificacion-cliente small{
+    display:block;
+    margin-top:4px;
+    color:#6b625d;
+}
+
+.cuenta-activa .cuenta-btn + .cuenta-btn{
+    margin-top:15px;
+    text-decoration:none;
+}
+
+@media(max-width:600px){
+
+    .cuenta-pagina{
+        padding:50px 15px;
+    }
+
+    .cuenta-contenedor{
+        padding:30px 22px;
+    }
+
+    .cuenta-titulo h1{
+        font-size:42px;
+    }
+
+    .cuenta-formulario h2,
+    .cuenta-activa h2{
+        font-size:27px;
+    }
+}
+
+.cuenta-pagina{
+    min-height:70vh;
+    padding:64px 24px;
+    align-items:flex-start;
+    background:
+        radial-gradient(ellipse at 8% 5%,rgba(231,205,165,.28),transparent 34%),
+        #f7f4ef;
+}
+
+.cuenta-contenedor{
+    max-width:520px;
+    padding:clamp(24px,4vw,48px);
+    border:1px solid rgba(107,38,53,.07);
+    border-radius:24px;
+    box-shadow:0 18px 55px rgba(60,35,25,.09);
+}
+
+.cuenta-contenedor.cuenta-contenedor-activa{
+    max-width:1080px;
+}
+
+.cuenta-titulo{
+    margin-bottom:28px;
+}
+
+.cuenta-contenedor-activa .cuenta-titulo{
+    text-align:left;
+}
+
+.cuenta-titulo h1{
+    margin-bottom:4px;
+    font-size:clamp(36px,5vw,46px);
+}
+
+.cuenta-titulo p{
+    margin:0;
+    color:#796d65;
+}
+
+.cuenta-activa{
+    text-align:left;
+}
+
+.cuenta-activa h2{
+    text-align:left;
+}
+
+.cuenta-bienvenida{
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:24px;
+    padding:26px 28px;
+    border-radius:19px;
+    background:linear-gradient(120deg,#6b2635,#874657);
+    color:#fff;
+}
+
+.cuenta-perfil{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    min-width:0;
+}
+
+.cuenta-icono{
+    flex:0 0 68px;
+    width:68px;
+    height:68px;
+    margin:0;
+    border:1px solid rgba(255,255,255,.42);
+    background:rgba(255,255,255,.14);
+    font-size:20px;
+}
+
+.cuenta-perfil-texto h2{
+    margin:4px 0 3px;
+    color:#fff;
+    font-size:clamp(23px,3vw,30px);
+    line-height:1.2;
+}
+
+.cuenta-perfil-texto h2 span{
+    color:inherit;
+}
+
+.cuenta-perfil-texto #nombreUsuario{
+    margin:0;
+    color:inherit;
+    font-size:inherit;
+    font-weight:inherit;
+}
+
+.cuenta-perfil-texto p{
+    margin:0;
+    color:rgba(255,255,255,.82);
+    line-height:1.55;
+}
+
+.cuenta-etiqueta{
+    display:block;
+    color:#9a7868;
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:.14em;
+}
+
+.cuenta-bienvenida .cuenta-etiqueta{
+    color:#f0d8bd;
+}
+
+.notificaciones-cliente{
+    flex:0 0 auto;
+    margin:0;
+    padding:0;
+    text-align:right;
+}
+
+.boton-notificaciones{
+    min-height:46px;
+    border-color:rgba(255,255,255,.38);
+    background:rgba(255,255,255,.12);
+    color:#fff;
+}
+
+.boton-notificaciones:hover,.boton-notificaciones:focus-visible{
+    border-color:#fff;
+    background:rgba(255,255,255,.2);
+    color:#fff;
+}
+
+.panel-notificaciones-cliente{
+    position:absolute;
+    z-index:5;
+    top:calc(100% - 10px);
+    right:20px;
+    width:min(390px,calc(100vw - 40px));
+    max-height:340px;
+    overflow:auto;
+    box-shadow:0 14px 36px rgba(40,25,20,.18);
+    text-align:left;
+}
+
+.cuenta-resumen{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:16px;
+    margin:22px 0 30px;
+}
+
+.resumen-tarjeta{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    min-height:98px;
+    padding:18px;
+    border:1px solid #eee6dd;
+    border-radius:15px;
+    background:#fffdfa;
+}
+
+.resumen-icono,.datos-cuenta-icono{
+    display:grid;
+    flex:0 0 42px;
+    width:42px;
+    height:42px;
+    place-items:center;
+    border-radius:13px;
+    background:#f5e9e7;
+    color:#6b2635;
+    font-size:13px;
+    font-weight:800;
+}
+
+.resumen-icono-activo{background:#eaf3e9;color:#327148}
+.resumen-icono-total{background:#f7efdc;color:#87641e}
+
+.resumen-tarjeta>div,.datos-cuenta>div{
+    display:grid;
+    gap:5px;
+    min-width:0;
+}
+
+.resumen-etiqueta{
+    color:#81756d;
+    font-size:12px;
+}
+
+.resumen-tarjeta strong{
+    overflow-wrap:anywhere;
+    color:#382c28;
+    font-size:20px;
+}
+
+.cuenta-datos-seccion{
+    margin-bottom:30px;
+    padding:23px;
+    border:1px solid #eee6dd;
+    border-radius:16px;
+    background:#fffdfa;
+}
+
+.seccion-cuenta-encabezado{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    margin-bottom:18px;
+}
+
+.seccion-cuenta-encabezado h2{
+    margin:5px 0 0;
+    color:#422e2a;
+    font-size:23px;
+}
+
+.cuenta-enlace{
+    color:#6b2635;
+    font-size:13px;
+    font-weight:700;
+    text-decoration:none;
+}
+
+.cuenta-enlace:hover{text-decoration:underline}
+
+.datos-cuenta{
+    display:flex;
+    align-items:center;
+    gap:13px;
+    margin:0;
+    padding:14px;
+    border:1px solid #f0e9e2;
+    background:#fff;
+}
+
+.datos-cuenta-lista{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:12px;
+}
+
+.datos-cuenta-icono{
+    background:#f5eee6;
+    font-size:20px;
+}
+
+.datos-telefono-icono{font-size:14px}
+
+.datos-cuenta p{
+    margin:0;
+    color:#443630;
+    overflow-wrap:anywhere;
+}
+
+.pedidos-cliente{
+    margin:0;
+    padding:26px 0 0;
+    border-top:1px solid #eee6dd;
+}
+
+.pedidos-encabezado{
+    align-items:flex-end;
+    margin-bottom:15px;
+}
+
+.activar-notificaciones{
+    padding:10px 14px;
+    border:1px solid #e5d8cf;
+    border-radius:10px;
+    background:#fff;
+    color:#6b2635;
+    font:inherit;
+    font-size:12px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.activar-notificaciones:hover{
+    border-color:#6b2635;
+    background:#fbf5ed;
+}
+
+.aviso-pedidos:not(:empty){
+    margin:0 0 15px;
+    border-radius:10px;
+}
+
+.lista-pedidos-cliente{
+    display:grid;
+    gap:14px;
+}
+
+.pedido-cliente{
+    margin:0;
+    padding:20px;
+    border:1px solid #eee6dd;
+    border-radius:15px;
+    background:#fff;
+    box-shadow:0 5px 16px rgba(60,35,25,.035);
+}
+
+.pedido-cabecera,.pedido-resumen{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+}
+
+.pedido-cabecera{
+    padding-bottom:14px;
+    border-bottom:1px solid #f0e9e2;
+}
+
+.pedido-cabecera h3{
+    margin:4px 0;
+    color:#382c28;
+    font-size:18px;
+}
+
+.pedido-cabecera time{
+    color:#81756d;
+    font-size:12px;
+}
+
+.pedido-estado,.estado-pago{
+    display:inline-flex;
+    align-items:center;
+    padding:6px 10px;
+    border-radius:999px;
+    font-size:11px;
+    font-weight:800;
+    white-space:nowrap;
+}
+
+.estado-pedido-activo,.estado-pago-pendiente{background:#fff2d9;color:#8a6215}
+.estado-pedido-entregado,.estado-pago-verificado{background:#e9f5eb;color:#28713c}
+.estado-pedido-cancelado{background:#fbe9e7;color:#a33a32}
+
+.pedido-resumen{
+    justify-content:flex-start;
+    gap:clamp(30px,8vw,100px);
+    padding:15px 0;
+}
+
+.pedido-resumen>div{
+    display:grid;
+    gap:6px;
+}
+
+.pedido-resumen>div>strong{
+    color:#382c28;
+    font-size:16px;
+}
+
+.pedido-resumen .estado-pago{
+    width:max-content;
+    font-size:11px;
+}
+
+.pedido-detalles{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:10px;
+    padding:13px;
+    border-radius:11px;
+    background:#faf7f3;
+}
+
+.pedido-dato{
+    display:grid;
+    gap:4px;
+    align-content:start;
+}
+
+.pedido-dato span,.pedido-factura span{
+    color:#81756d;
+    font-size:11px;
+}
+
+.pedido-dato strong,.pedido-factura strong{
+    color:#443630;
+    font-size:13px;
+    overflow-wrap:anywhere;
+}
+
+.pedido-dato small,.pedido-factura small{
+    color:#81756d;
+    font-size:11px;
+    overflow-wrap:anywhere;
+}
+
+.pedido-listo{
+    margin:12px 0 0;
+    border-radius:9px;
+}
+
+.pedido-pie{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+    margin-top:13px;
+}
+
+.pedido-factura{
+    display:grid;
+    gap:3px;
+}
+
+.pedido-factura-ok strong{color:#28713c}
+
+.pedido-accion{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    padding:9px 12px;
+    border:1px solid #e5d8cf;
+    border-radius:9px;
+    color:#6b2635;
+    font-size:12px;
+    font-weight:700;
+    text-decoration:none;
+    white-space:nowrap;
+}
+
+.pedido-accion:hover{
+    border-color:#6b2635;
+    background:#fbf5ed;
+}
+
+.pedidos-vacio{
+    padding:34px 18px;
+    border:1px dashed #d9c9bd;
+    border-radius:15px;
+    background:#fffdfa;
+    text-align:center;
+}
+
+.pedidos-vacio-icono{
+    display:grid;
+    width:48px;
+    height:48px;
+    margin:0 auto 12px;
+    place-items:center;
+    border-radius:50%;
+    background:#f5e9e7;
+    color:#6b2635;
+    font-size:26px;
+}
+
+.pedidos-vacio h3{margin:0 0 6px;color:#422e2a;font-size:18px}
+.pedidos-vacio p,.estado-lista-pedidos{color:#81756d;font-size:13px;line-height:1.6}
+.pedidos-vacio .cuenta-btn{display:inline-flex;width:auto;padding:11px 18px;text-decoration:none}
+
+.cuenta-acciones{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    margin-top:24px;
+    padding-top:20px;
+    border-top:1px solid #eee6dd;
+}
+
+.cuenta-acciones .cuenta-btn{
+    width:auto;
+    margin:0;
+    padding:12px 18px;
+    text-decoration:none;
+}
+
+.cuenta-cerrar-sesion{
+    padding:10px;
+    border:0;
+    background:transparent;
+    color:#796d65;
+    font:inherit;
+    font-size:13px;
+    cursor:pointer;
+}
+
+.cuenta-cerrar-sesion:hover{color:#a33a32;text-decoration:underline}
+
+@media(max-width:850px){
+    .cuenta-bienvenida{align-content:flex-start;flex-wrap:wrap;justify-content:flex-start}
+    .cuenta-perfil{flex:1 1 100%}
+    .cuenta-perfil-texto{flex:1}
+    .cuenta-bienvenida .notificaciones-cliente{align-self:flex-end;margin-left:auto}
+    .cuenta-resumen{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .resumen-tarjeta:last-child{grid-column:1/-1}
+}
+
+@media(max-width:700px){
+    .cuenta-pagina{padding:34px 14px}
+    .cuenta-contenedor{padding:22px 17px;border-radius:18px}
+    .cuenta-bienvenida{align-items:flex-start;flex-direction:column;padding:21px}
+    .cuenta-bienvenida .notificaciones-cliente{align-self:flex-end}
+    .panel-notificaciones-cliente{top:auto;right:0}
+    .cuenta-resumen{grid-template-columns:1fr;gap:10px;margin:16px 0 24px}
+    .resumen-tarjeta{min-height:76px;padding:13px}
+    .cuenta-datos-seccion{padding:18px}
+    .datos-cuenta-lista{grid-template-columns:1fr}
+    .pedidos-encabezado{align-items:flex-start;flex-direction:column}
+}
+
+@media(max-width:480px){
+    .cuenta-resumen{grid-template-columns:1fr}
+    .resumen-tarjeta:last-child{grid-column:auto}
+    .cuenta-perfil{align-items:flex-start;gap:12px}
+    .cuenta-icono{flex-basis:52px;width:52px;height:52px}
+    .cuenta-perfil-texto p{font-size:13px}
+    .seccion-cuenta-encabezado{align-items:flex-start}
+    .cuenta-enlace{font-size:11px;white-space:nowrap}
+    .pedido-cliente{padding:15px}
+    .pedido-cabecera{align-items:flex-start}
+    .pedido-resumen{justify-content:space-between;gap:12px}
+    .pedido-pie{align-items:flex-start;flex-direction:column}
+    .pedido-accion{align-self:flex-start}
+    .cuenta-acciones{align-items:stretch;flex-direction:column}
+    .cuenta-acciones .cuenta-btn{width:100%}
+}

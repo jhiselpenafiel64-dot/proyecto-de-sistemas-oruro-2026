@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Dulce Vita | Mi cuenta</title>
+    <link rel="icon" type="image/png" href="../logo.png?v=dulce-vita-2">
+    <link rel="stylesheet" href="style.css?v=contacto-global-1">
+    <link rel="stylesheet" href="responsive.css?v=contacto-global-1">
+    <link rel="stylesheet" href="cuenta.css?v=contacto-global-1">
+</head>
+
+<body>
+
+<header>
+    <div class="navbar">
+
+        <div class="logo-container">
+            <img src="../logo.png?v=dulce-vita-2" alt="Logo Dulce Vita">
+            <div class="logo-identidad">
+                <div class="logo-text">Dulce Vita</div>
+                <small class="logo-lema" data-empresa-lema></small>
+            </div>
+        </div>
+
+        <button class="menu-btn" id="menuBtn">☰</button>
+
+        <nav class="menu" id="menu">
+            <a href="index.html">Inicio</a>
+            <a href="catalogo.html">Catálogo</a>
+            <a href="carrito.html">Carrito</a>
+            <a href="cuenta.html">Mi cuenta</a>
+            <a href="index.html#visitanos">Contacto</a>
+        </nav>
+
+    </div>
+</header>
+
+<main class="cuenta-pagina">
+
+    <div class="cuenta-contenedor">
+
+        <div class="cuenta-titulo">
+            <h1>Mi cuenta</h1>
+            <p id="descripcionCuenta">Inicia sesión o crea una cuenta para realizar tus pedidos.</p>
+        </div>
+
+        <div id="mensaje" class="mensaje"></div>
+
+        <div id="formularioLogin" class="cuenta-formulario">
+
+            <h2>Iniciar sesión</h2>
+
+            <form id="loginForm">
+
+                <div class="campo">
+                    <label for="loginCorreo">Correo electrónico</label>
+                    <input type="email" id="loginCorreo" required>
+                </div>
+
+                <div class="campo">
+                    <label for="loginPassword">Contraseña</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+
+                <button type="submit" class="btn cuenta-btn">
+                    Iniciar sesión
+                </button>
+
+            </form>
+
+            <p class="cambiar-formulario">
+                ¿No tienes una cuenta?
+                <button type="button" id="mostrarRegistro">
+                    Crear cuenta
+                </button>
+            </p>
+
+        </div>
+
+        <div id="formularioRegistro" class="cuenta-formulario oculto">
+
+            <h2>Crear cuenta</h2>
+
+            <form id="registroForm">
+
+                <div class="campo">
+                    <label for="registroNombre">Nombre completo</label>
+                    <input type="text" id="registroNombre" maxlength="120" autocomplete="name" aria-describedby="registroNombreAyuda" required>
+                    <small id="registroNombreAyuda" class="form-text text-muted">Solo letras, espacios, apóstrofes, puntos y guiones.</small>
+                </div>
+
+                <div class="campo">
+                    <label for="registroCorreo">Correo electrónico</label>
+                    <input type="email" id="registroCorreo" required>
+                </div>
+
+                <div class="campo">
+                    <label for="registroTelefono">Teléfono</label>
+                    <input type="tel" id="registroTelefono" maxlength="30" inputmode="tel" autocomplete="tel" aria-describedby="registroTelefonoAyuda" required>
+                    <small id="registroTelefonoAyuda" class="form-text text-muted">Usa de 7 a 15 dígitos; puedes incluir +, espacios o guiones.</small>
+                </div>
+
+                <div class="campo">
+                    <label for="registroPassword">Contraseña</label>
+                    <input type="password" id="registroPassword" minlength="6" required>
+                </div>
+
+                <div class="campo">
+                    <label for="registroPasswordConfirmar">Confirmar contraseña</label>
+                    <input type="password" id="registroPasswordConfirmar" minlength="6" required>
+                </div>
+
+                <button type="submit" class="btn cuenta-btn">
+                    Crear cuenta
+                </button>
+
+            </form>
+
+            <div class="google-registro">
+                <p>O regístrate con</p>
+                <button type="button" id="googleRegistroAlternativo" class="google-registro-btn">
+                    <span class="google-marca" aria-hidden="true">G</span>
+                    Registrarse con Google
+                </button>
+                <div id="googleSigninButton" hidden></div>
+                <p id="googleEstado" class="google-estado" role="status" hidden></p>
+            </div>
+
+            <p class="cambiar-formulario">
+                ¿Ya tienes una cuenta?
+                <button type="button" id="mostrarLogin">
+                    Iniciar sesión
+                </button>
+            </p>
+
+        </div>
+
+        <div id="cuentaActiva" class="cuenta-activa oculto">
+
+            <section class="cuenta-bienvenida">
+                <div class="cuenta-perfil">
+                    <div class="cuenta-icono" aria-hidden="true">DV</div>
+                    <div class="cuenta-perfil-texto">
+                        <span class="cuenta-etiqueta">TU ESPACIO PERSONAL</span>
+                        <h2>¡Hola, <span id="nombreUsuario"></span>!</h2>
+                        <p>Consulta tus compras, sigue tus pedidos y encuentra tus comprobantes.</p>
+                    </div>
+                </div>
+                <section class="notificaciones-cliente" aria-label="Notificaciones de la cuenta">
+                    <button type="button" id="botonNotificacionesCliente" class="boton-notificaciones" aria-expanded="false" aria-controls="panelNotificacionesCliente">
+                        <svg class="icono-campana" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"></path></svg>
+                        <span>Notificaciones</span>
+                        <span id="contadorNotificacionesCliente" class="contador-notificaciones" hidden>0</span>
+                    </button>
+                    <div id="panelNotificacionesCliente" class="panel-notificaciones-cliente" hidden>
+                        <h3>Notificaciones</h3>
+                        <div id="listaNotificacionesCliente" aria-live="polite"><p>Cargando notificaciones...</p></div>
+                    </div>
+                </section>
+            </section>
+
+            <section class="cuenta-resumen" aria-label="Resumen de compras">
+                <article class="resumen-tarjeta">
+                    <span class="resumen-icono" aria-hidden="true">01</span>
+                    <div><span class="resumen-etiqueta">Compras realizadas</span><strong id="resumenCompras">—</strong></div>
+                </article>
+                <article class="resumen-tarjeta">
+                    <span class="resumen-icono resumen-icono-activo" aria-hidden="true">02</span>
+                    <div><span class="resumen-etiqueta">Pedidos en curso</span><strong id="resumenPedidosActivos">—</strong></div>
+                </article>
+                <article class="resumen-tarjeta">
+                    <span class="resumen-icono resumen-icono-total" aria-hidden="true">Bs</span>
+                    <div><span class="resumen-etiqueta">Total de compras</span><strong id="resumenTotalCompras">—</strong></div>
+                </article>
+            </section>
+
+            <section class="cuenta-datos-seccion" aria-labelledby="tituloDatosCuenta">
+                <div class="seccion-cuenta-encabezado">
+                    <div><span class="cuenta-etiqueta">INFORMACIÓN</span><h2 id="tituloDatosCuenta">Datos de mi cuenta</h2></div>
+                    <a href="catalogo.html" class="cuenta-enlace">Explorar catálogo <span aria-hidden="true">→</span></a>
+                </div>
+                <div class="datos-cuenta-lista">
+                    <div class="datos-cuenta">
+                        <span class="datos-cuenta-icono" aria-hidden="true">@</span>
+                        <div><span class="resumen-etiqueta">Correo electrónico</span><p id="correoUsuario"></p></div>
+                    </div>
+                    <div class="datos-cuenta">
+                        <span class="datos-cuenta-icono datos-telefono-icono" aria-hidden="true">T</span>
+                        <div><span class="resumen-etiqueta">Teléfono</span><p id="telefonoUsuario"></p></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="pedidos-cliente" aria-labelledby="tituloPedidosCliente">
+                <div class="seccion-cuenta-encabezado pedidos-encabezado">
+                    <div><span class="cuenta-etiqueta">TU ACTIVIDAD</span><h2 id="tituloPedidosCliente">Historial de compras</h2></div>
+                    <button type="button" class="activar-notificaciones" id="activarNotificaciones">Activar avisos de pedidos</button>
+                </div>
+                <p id="avisoPedidosCliente" class="aviso-pedidos" role="status" aria-live="polite"></p>
+                <div id="listaPedidosCliente" class="lista-pedidos-cliente" aria-live="polite">
+                    <p class="estado-lista-pedidos">Consultando tus compras...</p>
+                </div>
+            </section>
+
+            <div class="cuenta-acciones">
+                <a href="catalogo.html" class="btn cuenta-btn">Seguir comprando</a>
+                <button type="button" class="cuenta-cerrar-sesion" id="cerrarSesion">Cerrar sesión</button>
+            </div>
+
+        </div>
+
+        <section class="acceso-admin-cuenta" aria-labelledby="tituloAccesoPersonal">
+            <p>¿Trabajas en Dulce Vita?</p>
+            <button type="button" id="mostrarAccesoPersonal" class="acceso-admin-enlace">
+                Acceso para el personal
+            </button>
+
+            <form id="personalLoginForm" class="cuenta-formulario oculto">
+                <h2 id="tituloAccesoPersonal">Acceso para el personal</h2>
+
+                <div class="campo">
+                    <label for="personalUsuarioCuenta">Usuario</label>
+                    <input type="text" id="personalUsuarioCuenta" autocomplete="username" required>
+                </div>
+
+                <div class="campo">
+                    <label for="personalPasswordCuenta">Contraseña</label>
+                    <input type="password" id="personalPasswordCuenta" autocomplete="current-password" required>
+                </div>
+
+                <button type="submit" class="btn cuenta-btn">Ingresar al panel</button>
+                <button type="button" id="cancelarAccesoPersonal" class="acceso-admin-cancelar">Cancelar</button>
+            </form>
+        </section>
+
+    </div>
+
+</main>
+
+<footer class="footer">
+
+    <div class="footer-contenido">
+
+        <div>
+            <h3>Dulce Vita</h3>
+            <p>Café y pastelería artesanal.</p>
+        </div>
+
+        <div>
+            <h3>Atención</h3>
+            <p>Lunes a domingo</p>
+            <p>08:00 - 20:00</p>
+        </div>
+
+        <div>
+            <h3>Ubicación</h3>
+            <p>Parque de la Unión</p>
+            <p>Oruro, Bolivia</p>
+        </div>
+
+        <div>
+            <h3>Contacto</h3>
+            <p data-empresa-telefono></p>
+            <div class="footer-redes-sociales" data-empresa-redes hidden></div>
+            <p data-empresa-correo></p>
+        </div>
+
+    </div>
+
+    <div class="footer-final">
+        © 2026 Dulce Vita
+    </div>
+
+</footer>
+
+<script src="cuenta.js?v=cancelacion-efectivo-retiro-4"></script>
+<script src="menu.js?v=dulce-vita-3"></script>
+<script src="../identidad.js?v=3"></script>
+
+</body>
+</html>

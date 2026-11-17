@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Dulce Vita | Catálogo</title>
+    <link rel="icon" type="image/png" href="../logo.png?v=dulce-vita-2">
+    <link rel="stylesheet" href="style.css?v=contacto-global-1">
+    <link rel="stylesheet" href="responsive.css?v=contacto-global-1">
+</head>
+<body class="pagina-catalogo">
+    <header>
+        <div class="navbar">
+            <div class="logo-container">
+                <img src="../logo.png?v=dulce-vita-2" alt="Logo Dulce Vita">
+                <div class="logo-identidad">
+                    <div class="logo-text">Dulce Vita</div>
+                    <small class="logo-lema" data-empresa-lema></small>
+                </div>
+            </div>
+            <button class="menu-btn"id="menuBtn">☰</button>
+            <nav class="menu"id="menu">
+                <a href="index.html">Inicio</a>
+                <a href="catalogo.html">Catálogo</a>
+                <a href="carrito.html">Carrito</a>
+                <a href="index.html#visitanos">Contacto</a>
+                <a href="cuenta.html">Mi cuenta</a>
+            </nav>
+        </div>
+    </header>
+    <section class="catalogo-seccion">
+        <div class="catalogo-intro">
+            <span class="catalogo-etiqueta">DULCE VITA · CAFÉ Y PASTELERÍA</span>
+            <h1 class="titulo">Un antojo para cada momento</h1>
+            <p>Descubre nuestros favoritos, preparados con cariño para ti.</p>
+        </div>
+        <div class="admin-catalogo" id="administradorCatalogo">
+            <div id="sesionAdminCatalogo" class="admin-sesion-catalogo" hidden>
+                <span id="estadoSesionAdminCatalogo">Modo administrador activo</span>
+                <div class="admin-sesion-acciones">
+                    <button type="button" id="modoClienteCatalogo">Cambiar a modo cliente</button>
+                    <button type="button" id="cerrarSesionAdminCatalogo">Cerrar sesión</button>
+                </div>
+            </div>
+            <form id="formCrearProducto" class="producto-admin-form admin-crear-producto" hidden>
+                <div class="admin-formulario-encabezado">
+                    <span class="admin-icono admin-icono-agregar" aria-hidden="true">+</span>
+                    <div>
+                        <h2>Agregar producto</h2>
+                        <p>Completa los datos para incluirlo en el catálogo.</p>
+                    </div>
+                </div>
+                <label>Nombre del producto<input name="nombre" maxlength="120" placeholder="Ej. Tarta de frutos rojos" required></label>
+                <label>Descripción<textarea name="descripcion" maxlength="255" placeholder="Describe brevemente este producto"></textarea></label>
+                <label class="campo-foto">Foto del producto <span>JPG, PNG o WebP · máximo 5 MB</span><input name="imagen" type="file" accept="image/jpeg,image/png,image/webp"></label>
+                <label>Categoría del producto
+                    <select name="categoria" required>
+                        <option value="Tortas">Tortas</option>
+                        <option value="Espressos">Espressos</option>
+                        <option value="Frappes">Frappes</option>
+                        <option value="Bubbas">Bubbas</option>
+                        <option value="Crepes">Crepes</option>
+                        <option value="Pasteleria">Pastelería</option>
+                        <option value="Paninis">Paninis</option>
+                        <option value="Combos">Combos</option>
+                        <option value="Otros">Otros</option>
+                    </select>
+                </label>
+                <label>Precio (Bs.)<input name="precio" type="number" min="0" step="0.01" placeholder="0.00" required></label>
+                <label>Unidades disponibles<input name="stock" type="number" min="0" step="1" value="0" required></label>
+                <div class="producto-admin-acciones">
+                    <button type="submit" class="btn">Agregar al catálogo</button>
+                </div>
+            </form>
+            <p id="mensajeAdminCatalogo" class="admin-mensaje-catalogo" role="status" aria-live="polite"></p>
+        </div>
+        <div class="catalogo-herramientas">
+            <label class="buscador-contenedor" for="buscador">
+                <span aria-hidden="true">⌕</span>
+                <input type="search" id="buscador" placeholder="Buscar café, postre o favorito..." aria-label="Buscar productos">
+            </label>
+            <label class="ordenar" for="ordenCatalogo">
+                <span>Ordenar por</span>
+                <select id="ordenCatalogo" onchange="ordenarProductos(this.value)">
+                    <option value="">Recomendados</option>
+                    <option value="menor">Precio: menor a mayor</option>
+                    <option value="mayor">Precio: mayor a menor</option>
+                    <option value="az">Nombre A-Z</option>
+                </select>
+            </label>
+        </div>
+        <div class="catalogo-categorias">
+            <span class="catalogo-categorias-titulo">Explorar por categoría</span>
+            <div class="categorias">
+                <button type="button" class="categoria-activa" data-categoria="Todos" onclick="filtrarCategoria('Todos')">Todos</button>
+                <button type="button" data-categoria="Tortas" onclick="filtrarCategoria('Tortas')">Tortas</button>
+                <button type="button" data-categoria="Espressos" onclick="filtrarCategoria('Espressos')">Espressos</button>
+                <button type="button" data-categoria="Frappes" onclick="filtrarCategoria('Frappes')">Frappes</button>
+                <button type="button" data-categoria="Bubbas" onclick="filtrarCategoria('Bubbas')">Bubbas</button>
+                <button type="button" data-categoria="Crepes" onclick="filtrarCategoria('Crepes')">Crepes</button>
+                <button type="button" data-categoria="Pasteleria" onclick="filtrarCategoria('Pasteleria')">Pastelería</button>
+                <button type="button" data-categoria="Paninis" onclick="filtrarCategoria('Paninis')">Paninis</button>
+                <button type="button" data-categoria="Combos" onclick="filtrarCategoria('Combos')">Combos</button>
+                <button type="button" data-categoria="Otros" onclick="filtrarCategoria('Otros')">Otros</button>
+            </div>
+        </div>
+        <div class="productos-grid"id="productos"></div>
+    </section>
+    <footer class="footer">
+        <div class="footer-contenido">
+            <div>
+                <h3>Dulce Vita</h3>
+                <p>Café y pastelería artesanal.</p>
+            </div>
+            <div>
+                <h3>Horarios</h3>
+                <p>Lunes a Domingo</p>
+                <p>10:00 - 23:30</p>
+            </div>
+            <div>
+                <h3>Ubicación</h3>
+                <p>6 de Octubre, Parque de la Union Oruro, Bolivia</p>
+            </div>
+            <div>
+                <h3>Contacto</h3>
+                <p data-empresa-telefono></p>
+                <div class="footer-redes-sociales" data-empresa-redes hidden></div>
+                <p data-empresa-correo></p>
+            </div>
+        </div>
+        <div class="footer-final">© 2026 Ester & Jhisel </div>
+    </footer>
+    <script src="productos.js?v=stock-sync-2"></script>
+    <script src="catalogo.js?v=dulce-vita-2"></script>
+    <script src="carrito.js"></script>
+    <script src="menu.js?v=dulce-vita-3"></script>
+    <script src="../identidad.js?v=3"></script>
+</body>
+</html>
