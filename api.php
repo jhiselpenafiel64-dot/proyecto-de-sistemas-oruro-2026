@@ -786,8 +786,9 @@ try {
             $concepto,
             number_format((float) $monto, 2, '.', ''),
         ]);
+        $egresoId = (int) $stmt->fetchColumn();
         $pdo->commit();
-        jsonResponse(['ok' => true, 'id' => $usuarioIdNuevo], 201);
+        jsonResponse(['ok' => true, 'id' => $egresoId], 201);
     }
 
     if ($action === 'cerrar_arqueo') {
@@ -1543,7 +1544,7 @@ try {
             }
             throw $exception;
         }
-        jsonResponse(['ok' => true, 'id' => (int) $stmt->fetchColumn()], 201);
+        jsonResponse(['ok' => true, 'id' => $usuarioIdNuevo], 201);
     }
 
     if ($action === 'editar_usuario') {
