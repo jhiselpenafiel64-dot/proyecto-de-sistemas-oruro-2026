@@ -355,7 +355,7 @@ try {
                 $cliente = ['id' => (int) $pdo->lastInsertId(), 'nombre' => $nombre, 'correo' => $correo, 'telefono' => null];
                 $cuentaCreada = true;
             } catch (PDOException $exception) {
-                if ($exception->getCode() !== '23000') {
+                if ($exception->getCode() !== '23505') {
                     throw $exception;
                 }
                 $stmt = $pdo->prepare('SELECT id, nombre, correo, telefono, password_hash FROM clientes WHERE correo = ? LIMIT 1');
@@ -390,7 +390,7 @@ try {
         try {
             $stmt->execute([$nombre, $telefono, $correo, password_hash($password, PASSWORD_DEFAULT)]);
         } catch (PDOException $exception) {
-            if ($exception->getCode() === '23000') {
+            if ($exception->getCode() === '23505') {
                 jsonResponse(['ok' => false, 'mensaje' => 'Ya existe una cuenta con ese correo.'], 409);
             }
             throw $exception;
@@ -1504,7 +1504,7 @@ try {
             $stmt = $pdo->prepare('UPDATE clientes SET nombre = ?, correo = ?, telefono = ? WHERE id = ?');
             $stmt->execute([$nombre, $correo !== '' ? $correo : null, $telefono !== '' ? $telefono : null, $id]);
         } catch (PDOException $exception) {
-            if ($exception->getCode() === '23000') {
+            if ($exception->getCode() === '23505') {
                 jsonResponse(['ok' => false, 'mensaje' => 'Ya existe otro cliente con ese correo.'], 409);
             }
             throw $exception;
@@ -1536,7 +1536,7 @@ try {
             $stmt = $pdo->prepare('INSERT INTO usuarios (nombre, usuario, password_hash, rol) VALUES (?, ?, ?, ?)');
             $stmt->execute([$nombre, $usuario, password_hash($password, PASSWORD_DEFAULT), $rol]);
         } catch (PDOException $exception) {
-            if ($exception->getCode() === '23000') {
+            if ($exception->getCode() === '23505') {
                 jsonResponse(['ok' => false, 'mensaje' => 'Ya existe otro usuario con ese nombre de usuario.'], 409);
             }
             throw $exception;
@@ -1567,7 +1567,7 @@ try {
                 $stmt->execute([$nombre, $usuario, password_hash($password, PASSWORD_DEFAULT), $rol, $id]);
             }
         } catch (PDOException $exception) {
-            if ($exception->getCode() === '23000') {
+            if ($exception->getCode() === '23505') {
                 jsonResponse(['ok' => false, 'mensaje' => 'Ya existe otro usuario con ese nombre de usuario.'], 409);
             }
             throw $exception;
