@@ -6,15 +6,7 @@ services:
     dockerContext: .
     healthCheckPath: /logo.svg
     envVars:
-      - key: DB_HOST
+      - key: DATABASE_URL
         sync: false
-      - key: DB_NAME
-        sync: false
-      - key: DB_USER
-        sync: false
-      - key: DB_PASSWORD
-        sync: false
-      - key: DB_PORT
-        value: "3306"
       - key: GOOGLE_CLIENT_ID
         sync: false
