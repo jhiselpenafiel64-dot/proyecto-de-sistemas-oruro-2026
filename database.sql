@@ -193,7 +193,7 @@ CREATE TABLE IF NOT EXISTS configuracion_empresa (
 ) ENGINE=InnoDB;
 
 INSERT IGNORE INTO usuarios (nombre, usuario, password_hash, rol) VALUES
-    ('Administrador', 'admin', '$2y$10$V28e6NkUMQrPPZi1edT1IePZGEky5.sq3ClRJcYxLg2IZ3UpjITpa', 'Administrador');
+    ('Administrador', 'admin', '$2y$10$cRIvZhL7zVpzeM5dg8obLOGE1.hglnND8/5/vX7JXnlZvRZKrQA3C', 'Administrador');
 
 INSERT INTO productos (nombre, descripcion, precio, stock)
 SELECT 'Café Americano', 'Café filtrado tradicional', 12.00, 50
