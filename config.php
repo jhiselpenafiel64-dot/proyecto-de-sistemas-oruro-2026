@@ -112,13 +112,12 @@ function ensureArqueoSchema(PDO $connection): void
                 WHERE table_schema = current_schema() AND table_name = ? AND column_name = ?
             )');
             $stmt->execute([$table, $column]);
-            return $stmt->fetchColumn() === true || $stmt->fetchColumn() === 't';
+            return in_array($stmt->fetchColumn(), [true, 1, '1', 't'], true);
         };
         $tableExists = static function (string $table) use ($connection): bool {
             $stmt = $connection->prepare('SELECT to_regclass(?) IS NOT NULL');
             $stmt->execute([$table]);
-            $value = $stmt->fetchColumn();
-            return $value === true || $value === 't';
+            return in_array($stmt->fetchColumn(), [true, 1, '1', 't'], true);
         };
 
         if ($tableExists('pagos') && !$columnExists('pagos', 'pagado_en')) {
