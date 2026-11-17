@@ -261,7 +261,7 @@ try {
         if (!$record || !password_verify((string) ($data['password'] ?? ''), $record['password_hash'])) {
             jsonResponse(['ok' => false, 'mensaje' => 'Usuario o contraseña incorrectos.'], 401);
         }
-        $pdo->prepare('UPDATE usuarios SET ultimo_acceso = NOW() WHERE id = ?')->execute([$record['id']]);
+        $pdo->prepare('UPDATE usuarios SET ultimo_acceso = CURRENT_TIMESTAMP WHERE id = ?')->execute([$record['id']]);
         unset($record['password_hash']);
         if (empty($_SESSION['usuario']) && empty($_SESSION['cliente'])) {
             session_regenerate_id(true);
@@ -472,11 +472,11 @@ try {
             pa.estado AS estado_pago, pa.metodo AS metodo_pago,
             CASE WHEN p.estado = 'Pendiente' AND pa.estado = 'Pendiente'
                 AND p.tipo_entrega = 'Retiro' AND pa.metodo = 'Efectivo'
-                THEN GREATEST(0, TIMESTAMPDIFF(SECOND, CURRENT_TIMESTAMP, DATE_ADD(p.creado_en, INTERVAL {$ventanaCancelacionPedidoWebMinutos} MINUTE)))
+                THEN GREATEST(0, EXTRACT(EPOCH FROM ((p.creado_en + INTERVAL '{$ventanaCancelacionPedidoWebMinutos} minutes') - CURRENT_TIMESTAMP))::INTEGER)
                 ELSE 0 END AS segundos_cancelacion,
             CASE WHEN p.estado = 'Pendiente' AND pa.estado = 'Pendiente'
                 AND p.tipo_entrega = 'Retiro' AND pa.metodo = 'Efectivo'
-                THEN DATE_ADD(p.creado_en, INTERVAL {$ventanaCancelacionPedidoWebMinutos} MINUTE)
+                THEN p.creado_en + INTERVAL '{$ventanaCancelacionPedidoWebMinutos} minutes'
                 ELSE NULL END AS fecha_limite_cancelacion,
             (pa.comprobante_qr IS NOT NULL) AS tiene_comprobante_qr,
             EXISTS(SELECT 1 FROM notificaciones_cliente n WHERE n.pedido_id = p.id AND n.cliente_id = p.cliente_id) AS comprobante_enviado
@@ -504,7 +504,7 @@ try {
         }
         $pdo->beginTransaction();
         $stmt = $pdo->prepare("SELECT p.estado, p.tipo_entrega, pa.estado AS estado_pago, pa.metodo AS metodo_pago,
-            (p.creado_en >= DATE_SUB(CURRENT_TIMESTAMP, INTERVAL {$ventanaCancelacionPedidoWebMinutos} MINUTE)) AS dentro_plazo
+            (p.creado_en >= CURRENT_TIMESTAMP - INTERVAL '{$ventanaCancelacionPedidoWebMinutos} minutes') AS dentro_plazo
             FROM pedidos p
             LEFT JOIN pagos pa ON pa.pedido_id = p.id
             WHERE p.id = ? AND p.cliente_id = ? AND p.usuario_id IS NULL
@@ -721,7 +721,7 @@ try {
                 INNER JOIN pedidos p ON p.id = pa.pedido_id
                 WHERE pa.metodo = 'Efectivo' AND pa.estado = 'Pagado'
                 AND p.tipo_entrega = 'Retiro'
-                AND pa.pagado_en >= a.apertura AND pa.pagado_en <= NOW()), 0) AS efectivo_ventas
+                AND pa.pagado_en >= a.apertura AND pa.pagado_en <= CURRENT_TIMESTAMP), 0) AS efectivo_ventas
             , COALESCE((SELECT SUM(e.monto) FROM arqueo_egresos e
                 WHERE e.arqueo_caja_id = a.id), 0) AS efectivo_egresos
             FROM arqueos_caja a
@@ -807,7 +807,7 @@ try {
             INNER JOIN pedidos p ON p.id = pa.pedido_id
             WHERE pa.metodo = 'Efectivo' AND pa.estado = 'Pagado'
             AND p.tipo_entrega = 'Retiro'
-            AND pa.pagado_en >= ? AND pa.pagado_en <= NOW()");
+            AND pa.pagado_en >= ? AND pa.pagado_en <= CURRENT_TIMESTAMP");
         $ventasStmt->execute([$arqueo['apertura']]);
         $efectivoVentas = (float) $ventasStmt->fetchColumn();
         $egresosStmt = $pdo->prepare('SELECT COALESCE(SUM(monto), 0) FROM arqueo_egresos WHERE arqueo_caja_id = ?');
@@ -817,7 +817,7 @@ try {
         $esperado = (float) $arqueo['efectivo_inicial'] + $efectivoVentas - $efectivoEgresos;
         $stmt = $pdo->prepare('UPDATE arqueos_caja
             SET usuario_cierre_id = ?, efectivo_ventas = ?, efectivo_egresos = ?, efectivo_contado = ?,
-                diferencia = ?, cierre = NOW()
+                diferencia = ?, cierre = CURRENT_TIMESTAMP
             WHERE id = ? AND cierre IS NULL');
         $stmt->execute([
             (int) $currentUser['id'],
@@ -856,7 +856,7 @@ try {
                     INNER JOIN pedidos p ON p.id = pa.pedido_id
                     WHERE pa.metodo = 'Efectivo' AND pa.estado = 'Pagado'
                     AND p.tipo_entrega = 'Retiro'
-                    AND pa.pagado_en >= a.apertura AND pa.pagado_en <= NOW()), 0)
+                    AND pa.pagado_en >= a.apertura AND pa.pagado_en <= CURRENT_TIMESTAMP), 0)
                 ELSE a.efectivo_ventas END AS efectivo_ventas,
             CASE WHEN a.cierre IS NULL THEN
                 COALESCE((SELECT SUM(e.monto) FROM arqueo_egresos e WHERE e.arqueo_caja_id = a.id), 0)
@@ -866,7 +866,7 @@ try {
             FROM arqueos_caja a
             INNER JOIN usuarios ua ON ua.id = a.usuario_apertura_id
             LEFT JOIN usuarios uc ON uc.id = a.usuario_cierre_id
-            WHERE a.apertura >= ? AND a.apertura < DATE_ADD(?, INTERVAL 1 DAY)
+            WHERE a.apertura >= ? AND a.apertura < (?::date + INTERVAL '1 day')
             ORDER BY a.apertura DESC");
         $stmt->execute([$desde, $hasta]);
         $arqueos = $stmt->fetchAll();
@@ -987,7 +987,7 @@ try {
         }
         $stmt = $pdo->prepare("INSERT INTO notificaciones_cliente (cliente_id, pedido_id)
             VALUES (?, ?)
-            ON DUPLICATE KEY UPDATE cliente_id = VALUES(cliente_id), creada_en = CURRENT_TIMESTAMP, leida_en = NULL");
+            ON CONFLICT (pedido_id) DO UPDATE SET cliente_id = EXCLUDED.cliente_id, creada_en = CURRENT_TIMESTAMP, leida_en = NULL");
         $stmt->execute([(int) $clienteId, $pedidoId]);
         jsonResponse(['ok' => true, 'mensaje' => 'Comprobante enviado a las notificaciones de la cuenta del cliente.']);
     }
@@ -1123,7 +1123,7 @@ try {
         if (!is_string($json)) {
             jsonResponse(['ok' => false, 'mensaje' => 'No se pudo preparar la configuración para guardarla.'], 500);
         }
-        $stmt = $pdo->prepare('INSERT INTO configuracion_empresa (id, configuracion) VALUES (1, ?) ON DUPLICATE KEY UPDATE configuracion = VALUES(configuracion)');
+        $stmt = $pdo->prepare('INSERT INTO configuracion_empresa (id, configuracion) VALUES (1, ?) ON CONFLICT (id) DO UPDATE SET configuracion = EXCLUDED.configuracion');
         $stmt->execute([$json]);
         header('Cache-Control: no-store, private');
         jsonResponse(['ok' => true, 'configuracion' => $configuracion]);
@@ -1192,7 +1192,7 @@ try {
         }
         $stmt = $pdo->prepare("UPDATE pagos pa
             INNER JOIN pedidos p ON p.id = pa.pedido_id
-            SET pa.estado = 'Pagado', pa.pagado_en = NOW(), pa.codigo_transaccion = IF(pa.metodo = 'QR', ?, NULL)
+            SET pa.estado = 'Pagado', pa.pagado_en = CURRENT_TIMESTAMP, pa.codigo_transaccion = IF(pa.metodo = 'QR', ?, NULL)
             WHERE p.id = ? AND p.tipo_entrega = 'Delivery' AND p.estado NOT IN ('Entregado', 'Cancelado')
             AND pa.estado = 'Pendiente' AND pa.metodo = 'QR' AND ? <> ''
             AND (? <> 'Repartidor' OR p.repartidor_id = ?)");
@@ -1214,7 +1214,7 @@ try {
         }
         $stmt = $pdo->prepare("UPDATE pagos pa
             INNER JOIN pedidos p ON p.id = pa.pedido_id
-            SET pa.estado = 'Pagado', pa.pagado_en = NOW()
+            SET pa.estado = 'Pagado', pa.pagado_en = CURRENT_TIMESTAMP
             WHERE p.id = ? AND p.repartidor_id = ? AND p.tipo_entrega = 'Delivery'
             AND p.estado NOT IN ('Entregado', 'Cancelado')
             AND pa.estado = 'Pendiente' AND pa.metodo = 'Efectivo'");
@@ -1277,7 +1277,7 @@ try {
         }
         $stmt = $pdo->prepare("UPDATE pagos pa
             INNER JOIN pedidos p ON p.id = pa.pedido_id
-            SET pa.estado = 'Pagado', pa.pagado_en = NOW(), pa.codigo_transaccion = IF(pa.metodo = 'QR', ?, NULL)
+            SET pa.estado = 'Pagado', pa.pagado_en = CURRENT_TIMESTAMP, pa.codigo_transaccion = IF(pa.metodo = 'QR', ?, NULL)
             WHERE p.id = ? AND p.estado NOT IN ('Entregado', 'Cancelado')
             AND pa.estado = 'Pendiente' AND pa.metodo = 'QR' AND ? <> ''");
         $stmt->execute([$codigoTransaccion, $pedidoId, $codigoTransaccion]);
@@ -1298,7 +1298,7 @@ try {
         }
         $stmt = $pdo->prepare("UPDATE pagos pa
             INNER JOIN pedidos p ON p.id = pa.pedido_id
-            SET pa.estado = 'Pagado', pa.pagado_en = NOW()
+            SET pa.estado = 'Pagado', pa.pagado_en = CURRENT_TIMESTAMP
             WHERE p.id = ? AND p.usuario_id IS NULL AND p.tipo_entrega = 'Retiro'
             AND p.estado NOT IN ('Entregado', 'Cancelado')
             AND pa.metodo = 'Efectivo' AND pa.estado = 'Pendiente'");
@@ -1471,7 +1471,7 @@ try {
         if (!is_string($contenidoJson)) {
             jsonResponse(['ok' => false, 'mensaje' => 'No se pudo preparar el contenido para guardarlo.'], 500);
         }
-        $stmt = $pdo->prepare('INSERT INTO contenido_inicio (id, contenido) VALUES (1, ?) ON DUPLICATE KEY UPDATE contenido = VALUES(contenido)');
+        $stmt = $pdo->prepare('INSERT INTO contenido_inicio (id, contenido) VALUES (1, ?) ON CONFLICT (id) DO UPDATE SET contenido = EXCLUDED.contenido');
         $stmt->execute([$contenidoJson]);
         header('Cache-Control: no-store, private');
         jsonResponse(['ok' => true, 'contenido' => $contenido]);
@@ -1614,11 +1614,11 @@ try {
             FROM productos p WHERE p.activo = 1 ORDER BY p.nombre")->fetchAll();
         $lotes = $pdo->query("SELECT l.id AS lote_id, l.producto_id, p.nombre AS producto, l.cantidad_inicial,
             l.cantidad_disponible, l.fecha_ingreso, l.fecha_vencimiento, l.origen,
-            DATEDIFF(l.fecha_vencimiento, CURRENT_DATE) AS dias_para_vencer,
+            (l.fecha_vencimiento - CURRENT_DATE) AS dias_para_vencer,
             CASE
                 WHEN l.fecha_vencimiento IS NULL THEN 'Sin vencimiento'
                 WHEN l.fecha_vencimiento < CURRENT_DATE THEN 'Vencido'
-                WHEN l.fecha_vencimiento <= DATE_ADD(CURRENT_DATE, INTERVAL 30 DAY) THEN 'Por vencer'
+                WHEN l.fecha_vencimiento <= (CURRENT_DATE + INTERVAL '30 days') THEN 'Por vencer'
                 ELSE 'Vigente'
             END AS estado,
             u.nombre AS usuario
@@ -1909,7 +1909,7 @@ try {
             p.tipo_entrega, p.direccion_entrega, p.zona_entrega, p.costo_delivery, p.estado_entrega,
             p.repartidor_id, r.nombre AS nombre_repartidor,
             p.creado_en AS fecha,
-            IF(p.usuario_id IS NULL, 'Web', 'Panel') AS origen,
+            CASE WHEN p.usuario_id IS NULL THEN 'Web' ELSE 'Panel' END AS origen,
             f.numero AS factura_numero, f.nombre_fiscal, f.nit_ci, f.direccion AS direccion_fiscal,
             f.estado_emision, f.cuf,
             pa.metodo AS metodo_pago, pa.monto AS monto_pago, pa.estado AS estado_pago,
@@ -1993,7 +1993,7 @@ try {
         $stmt = $pdo->prepare("INSERT INTO facturas (pedido_id, numero, nombre_fiscal, nit_ci, direccion, total, estado_emision) VALUES (?, ?, ?, ?, ?, ?, 'Pendiente SIAT')");
         $stmt->execute([$pedidoId, $numeroFactura, $nombreFiscal, $nitCi, $direccionFiscal !== '' ? $direccionFiscal : null, $total]);
         $facturaId = $pdo->lastInsertId();
-        $stmt = $pdo->prepare("INSERT INTO pagos (pedido_id, factura_id, metodo, monto, estado, pagado_en) VALUES (?, ?, ?, ?, 'Pagado', NOW())");
+        $stmt = $pdo->prepare("INSERT INTO pagos (pedido_id, factura_id, metodo, monto, estado, pagado_en) VALUES (?, ?, ?, ?, 'Pagado', CURRENT_TIMESTAMP)");
         $stmt->execute([$pedidoId, $facturaId, $metodoPago, $montoPago]);
         foreach ($productos as [$producto, $cantidad]) {
             $pdo->prepare('INSERT INTO pedido_detalles (pedido_id, producto_id, cantidad, precio_unitario) VALUES (?, ?, ?, ?)')->execute([$pedidoId, $producto['id'], $cantidad, $producto['precio']]);
