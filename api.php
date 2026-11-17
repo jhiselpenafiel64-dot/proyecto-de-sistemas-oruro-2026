@@ -349,10 +349,10 @@ try {
                 $nombre = strstr($correo, '@', true) ?: $correo;
             }
             $nombre = mb_substr($nombre, 0, 120, 'UTF-8');
-            $stmt = $pdo->prepare("INSERT INTO clientes (nombre, telefono, correo, password_hash, origen_registro) VALUES (?, NULL, ?, NULL, 'pagina_cliente')");
+            $stmt = $pdo->prepare("INSERT INTO clientes (nombre, telefono, correo, password_hash, origen_registro) VALUES (?, NULL, ?, NULL, 'pagina_cliente') RETURNING id");
             try {
                 $stmt->execute([$nombre, $correo]);
-                $cliente = ['id' => (int) $pdo->lastInsertId(), 'nombre' => $nombre, 'correo' => $correo, 'telefono' => null];
+                $cliente = ['id' => (int) $stmt->fetchColumn(), 'nombre' => $nombre, 'correo' => $correo, 'telefono' => null];
                 $cuentaCreada = true;
             } catch (PDOException $exception) {
                 if ($exception->getCode() !== '23505') {
@@ -386,9 +386,10 @@ try {
             || !$telefonoValido($telefono) || strlen($telefono) > 30 || strlen($password) < 6) {
             jsonResponse(['ok' => false, 'mensaje' => 'Ingresa un nombre solo con letras, un correo válido, un teléfono de 7 a 15 dígitos y una contraseña de al menos 6 caracteres.'], 422);
         }
-        $stmt = $pdo->prepare("INSERT INTO clientes (nombre, telefono, correo, password_hash, origen_registro) VALUES (?, ?, ?, ?, 'pagina_cliente')");
+        $stmt = $pdo->prepare("INSERT INTO clientes (nombre, telefono, correo, password_hash, origen_registro) VALUES (?, ?, ?, ?, 'pagina_cliente') RETURNING id");
         try {
             $stmt->execute([$nombre, $telefono, $correo, password_hash($password, PASSWORD_DEFAULT)]);
+        $clienteIdNuevo = (int) $stmt->fetchColumn();
         } catch (PDOException $exception) {
             if ($exception->getCode() === '23505') {
                 jsonResponse(['ok' => false, 'mensaje' => 'Ya existe una cuenta con ese correo.'], 409);
@@ -398,7 +399,7 @@ try {
         if (empty($_SESSION['usuario']) && empty($_SESSION['cliente'])) {
             session_regenerate_id(true);
         }
-        $_SESSION['cliente'] = ['id' => (int) $pdo->lastInsertId(), 'nombre' => $nombre, 'correo' => $correo, 'telefono' => $telefono];
+        $_SESSION['cliente'] = ['id' => $clienteIdNuevo, 'nombre' => $nombre, 'correo' => $correo, 'telefono' => $telefono];
         jsonResponse(['ok' => true, 'cliente' => $_SESSION['cliente']], 201);
     }
 
@@ -652,7 +653,7 @@ try {
         }
 
         $total += $costoDelivery;
-        $stmt = $pdo->prepare('INSERT INTO pedidos (cliente_id, usuario_id, total, tipo_entrega, direccion_entrega, zona_entrega, costo_delivery) VALUES (?, NULL, ?, ?, ?, ?, ?)');
+        $stmt = $pdo->prepare('INSERT INTO pedidos (cliente_id, usuario_id, total, tipo_entrega, direccion_entrega, zona_entrega, costo_delivery) VALUES (?, NULL, ?, ?, ?, ?, ?) RETURNING id');
         $stmt->execute([
             (int) $cliente['id'],
             $total,
@@ -661,11 +662,11 @@ try {
             $tipoEntrega === 'Delivery' ? $zonaEntrega : null,
             $costoDelivery,
         ]);
-        $pedidoId = (int) $pdo->lastInsertId();
+        $pedidoId = (int) $stmt->fetchColumn();
         $numeroFacturaPendiente = 'PEND-' . str_pad((string) $pedidoId, 8, '0', STR_PAD_LEFT);
-        $stmt = $pdo->prepare("INSERT INTO facturas (pedido_id, numero, nombre_fiscal, nit_ci, direccion, total, estado_emision) VALUES (?, ?, ?, ?, ?, ?, 'Pendiente SIAT')");
+        $stmt = $pdo->prepare("INSERT INTO facturas (pedido_id, numero, nombre_fiscal, nit_ci, direccion, total, estado_emision) VALUES (?, ?, ?, ?, ?, ?, 'Pendiente SIAT') RETURNING id");
         $stmt->execute([$pedidoId, $numeroFacturaPendiente, $nombreFiscal, $nitCi, $direccionFiscal !== '' ? $direccionFiscal : null, $total]);
-        $facturaId = (int) $pdo->lastInsertId();
+        $facturaId = (int) $stmt->fetchColumn();
         if ($rutaComprobanteQr !== null) {
             $directorioComprobantes = __DIR__ . '/la polar/uploads/comprobantes_qr';
             if (!is_dir($directorioComprobantes) && !mkdir($directorioComprobantes, 0755, true) && !is_dir($directorioComprobantes)) {
@@ -749,9 +750,9 @@ try {
             $pdo->rollBack();
             jsonResponse(['ok' => false, 'mensaje' => 'Ya existe una caja abierta. Debe cerrarse antes de iniciar otro arqueo.'], 409);
         }
-        $stmt = $pdo->prepare('INSERT INTO arqueos_caja (usuario_apertura_id, efectivo_inicial) VALUES (?, ?)');
+        $stmt = $pdo->prepare('INSERT INTO arqueos_caja (usuario_apertura_id, efectivo_inicial) VALUES (?, ?) RETURNING id');
         $stmt->execute([(int) $currentUser['id'], number_format((float) $monto, 2, '.', '')]);
-        $arqueoId = (int) $pdo->lastInsertId();
+        $arqueoId = (int) $stmt->fetchColumn();
         $pdo->commit();
         jsonResponse(['ok' => true, 'id' => $arqueoId], 201);
     }
@@ -777,7 +778,7 @@ try {
             $pdo->rollBack();
             jsonResponse(['ok' => false, 'mensaje' => 'Abre la caja antes de registrar un egreso.'], 409);
         }
-        $stmt = $pdo->prepare('INSERT INTO arqueo_egresos (arqueo_caja_id, usuario_id, categoria, concepto, monto) VALUES (?, ?, ?, ?, ?)');
+        $stmt = $pdo->prepare('INSERT INTO arqueo_egresos (arqueo_caja_id, usuario_id, categoria, concepto, monto) VALUES (?, ?, ?, ?, ?) RETURNING id');
         $stmt->execute([
             (int) $arqueoId,
             (int) $currentUser['id'],
@@ -786,7 +787,7 @@ try {
             number_format((float) $monto, 2, '.', ''),
         ]);
         $pdo->commit();
-        jsonResponse(['ok' => true, 'id' => (int) $pdo->lastInsertId()], 201);
+        jsonResponse(['ok' => true, 'id' => $usuarioIdNuevo], 201);
     }
 
     if ($action === 'cerrar_arqueo') {
@@ -1533,15 +1534,16 @@ try {
             jsonResponse(['ok' => false, 'mensaje' => 'Nombre, usuario y una contraseña de 6 caracteres son obligatorios.'], 422);
         }
         try {
-            $stmt = $pdo->prepare('INSERT INTO usuarios (nombre, usuario, password_hash, rol) VALUES (?, ?, ?, ?)');
+            $stmt = $pdo->prepare('INSERT INTO usuarios (nombre, usuario, password_hash, rol) VALUES (?, ?, ?, ?) RETURNING id');
             $stmt->execute([$nombre, $usuario, password_hash($password, PASSWORD_DEFAULT), $rol]);
+            $usuarioIdNuevo = (int) $stmt->fetchColumn();
         } catch (PDOException $exception) {
             if ($exception->getCode() === '23505') {
                 jsonResponse(['ok' => false, 'mensaje' => 'Ya existe otro usuario con ese nombre de usuario.'], 409);
             }
             throw $exception;
         }
-        jsonResponse(['ok' => true, 'id' => (int) $pdo->lastInsertId()], 201);
+        jsonResponse(['ok' => true, 'id' => (int) $stmt->fetchColumn()], 201);
     }
 
     if ($action === 'editar_usuario') {
@@ -1651,9 +1653,9 @@ try {
         }
         $stmt = $pdo->prepare("INSERT INTO inventario_lotes
             (producto_id, cantidad_inicial, cantidad_disponible, fecha_ingreso, fecha_vencimiento, origen, usuario_id)
-            VALUES (?, ?, ?, ?, ?, 'Entrada', ?)");
+            VALUES (?, ?, ?, ?, ?, 'Entrada', ?) RETURNING id");
         $stmt->execute([$productoId, $cantidad, $cantidad, $fechaIngreso, $fechaVencimiento, (int) $currentUser['id']]);
-        $loteId = (int) $pdo->lastInsertId();
+        $loteId = (int) $stmt->fetchColumn();
         $stmt = $pdo->prepare("INSERT INTO inventario_movimientos
             (producto_id, lote_id, usuario_id, tipo, cantidad, fecha_movimiento, motivo)
             VALUES (?, ?, ?, 'Entrada', ?, ?, 'Ingreso de nuevo stock')");
@@ -1880,7 +1882,7 @@ try {
             $imagen = 'uploads/productos/' . $nombreImagen;
         }
         if ($action === 'crear_producto') {
-            $stmt = $pdo->prepare('INSERT INTO productos (nombre, descripcion, categoria, precio, stock, imagen) VALUES (?, ?, ?, ?, 0, ?)');
+            $stmt = $pdo->prepare('INSERT INTO productos (nombre, descripcion, categoria, precio, stock, imagen) VALUES (?, ?, ?, ?, 0, ?) RETURNING id');
             $stmt->execute([$nombre, $descripcion !== '' ? $descripcion : null, $categoria, $precio, $imagen]);
             jsonResponse(['ok' => true, 'id' => (int) $pdo->lastInsertId()], 201);
         }
@@ -1951,9 +1953,9 @@ try {
         $stmt->execute([$cliente, $telefono]);
         $clienteId = $stmt->fetchColumn();
         if (!$clienteId) {
-            $stmt = $pdo->prepare("INSERT INTO clientes (nombre, telefono, origen_registro) VALUES (?, ?, 'empleado')");
+            $stmt = $pdo->prepare("INSERT INTO clientes (nombre, telefono, origen_registro) VALUES (?, ?, 'empleado') RETURNING id");
             $stmt->execute([$cliente, $telefono]);
-            $clienteId = $pdo->lastInsertId();
+            $clienteId = $stmt->fetchColumn();
         } else {
             $stmt = $pdo->prepare("UPDATE clientes SET origen_registro = 'empleado' WHERE id = ? AND origen_registro = 'desconocido' AND correo IS NULL AND password_hash IS NULL");
             $stmt->execute([$clienteId]);
@@ -1979,13 +1981,13 @@ try {
             jsonResponse(['ok' => false, 'mensaje' => 'El monto del pago debe cubrir el total del pedido.'], 422);
         }
 
-        $stmt = $pdo->prepare('INSERT INTO pedidos (cliente_id, usuario_id, total) VALUES (?, ?, ?)');
+        $stmt = $pdo->prepare('INSERT INTO pedidos (cliente_id, usuario_id, total) VALUES (?, ?, ?) RETURNING id');
         $stmt->execute([$clienteId, $currentUser['id'], $total]);
-        $pedidoId = $pdo->lastInsertId();
+        $pedidoId = $stmt->fetchColumn();
         $numeroFactura = 'PEND-' . str_pad((string) $pedidoId, 8, '0', STR_PAD_LEFT);
         $stmt = $pdo->prepare("INSERT INTO facturas (pedido_id, numero, nombre_fiscal, nit_ci, direccion, total, estado_emision) VALUES (?, ?, ?, ?, ?, ?, 'Pendiente SIAT')");
         $stmt->execute([$pedidoId, $numeroFactura, $nombreFiscal, $nitCi, $direccionFiscal !== '' ? $direccionFiscal : null, $total]);
-        $facturaId = $pdo->lastInsertId();
+        $facturaId = $stmt->fetchColumn();
         $stmt = $pdo->prepare("INSERT INTO pagos (pedido_id, factura_id, metodo, monto, estado, pagado_en) VALUES (?, ?, ?, ?, 'Pagado', CURRENT_TIMESTAMP)");
         $stmt->execute([$pedidoId, $facturaId, $metodoPago, $montoPago]);
         foreach ($productos as [$producto, $cantidad]) {
