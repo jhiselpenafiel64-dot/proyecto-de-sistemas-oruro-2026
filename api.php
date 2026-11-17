@@ -2015,7 +2015,7 @@ try {
             FROM pedidos p
             LEFT JOIN pagos pa ON pa.pedido_id = p.id
             WHERE p.id = ?
-            FOR UPDATE");
+            FOR UPDATE OF p");
         $stmt->execute([$pedidoId]);
         $pedido = $stmt->fetch();
         if (!$pedido) {
