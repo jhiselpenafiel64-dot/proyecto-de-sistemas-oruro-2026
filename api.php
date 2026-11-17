@@ -1884,7 +1884,7 @@ try {
         if ($action === 'crear_producto') {
             $stmt = $pdo->prepare('INSERT INTO productos (nombre, descripcion, categoria, precio, stock, imagen) VALUES (?, ?, ?, ?, 0, ?) RETURNING id');
             $stmt->execute([$nombre, $descripcion !== '' ? $descripcion : null, $categoria, $precio, $imagen]);
-            jsonResponse(['ok' => true, 'id' => (int) $pdo->lastInsertId()], 201);
+            jsonResponse(['ok' => true, 'id' => (int) $stmt->fetchColumn()], 201);
         }
         $sql = 'UPDATE productos SET nombre = ?, descripcion = ?, categoria = ?, precio = ?';
         $parametros = [$nombre, $descripcion !== '' ? $descripcion : null, $categoria, $precio];
