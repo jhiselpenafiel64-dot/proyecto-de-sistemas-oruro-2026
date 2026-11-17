@@ -1192,11 +1192,11 @@ try {
         }
         $stmt = $pdo->prepare("UPDATE pagos pa
             INNER JOIN pedidos p ON p.id = pa.pedido_id
-            SET pa.estado = 'Pagado', pa.pagado_en = CURRENT_TIMESTAMP, pa.codigo_transaccion = IF(pa.metodo = 'QR', ?, NULL)
+            SET pa.estado = 'Pagado', pa.pagado_en = CURRENT_TIMESTAMP, pa.codigo_transaccion = CASE WHEN pa.metodo = 'QR' THEN ? ELSE NULL END
             WHERE p.id = ? AND p.tipo_entrega = 'Delivery' AND p.estado NOT IN ('Entregado', 'Cancelado')
             AND pa.estado = 'Pendiente' AND pa.metodo = 'QR' AND ? <> ''
             AND (? <> 'Repartidor' OR p.repartidor_id = ?)");
-        $stmt->execute([$codigoTransaccion, $pedidoId, $codigoTransaccion, $currentUser['rol'], (int) $currentUser['id']]);
+        $stmt->execute([$codigoTransaccion, $pedidoId, $currentUser['rol'], (int) $currentUser['id'], $codigoTransaccion]);
         if ($stmt->rowCount() !== 1) {
             jsonResponse(['ok' => false, 'mensaje' => 'No se encontró un pago pendiente o falta el código de transacción QR.'], 404);
         }
@@ -1237,7 +1237,7 @@ try {
         }
         $stmt = $pdo->prepare("UPDATE pedidos p
             INNER JOIN pagos pa ON pa.pedido_id = p.id
-            SET p.estado_entrega = ?, p.estado = IF(? = 'Entregado', 'Entregado', p.estado)
+            SET p.estado_entrega = ?, p.estado = CASE WHEN ? = 'Entregado' THEN 'Entregado' ELSE p.estado END
             WHERE p.id = ? AND p.repartidor_id = ? AND p.tipo_entrega = 'Delivery' AND p.estado NOT IN ('Entregado', 'Cancelado')
             AND (pa.estado = 'Pagado' OR ? <> 'Entregado')");
         $stmt->execute([$estadoEntrega, $estadoEntrega, $pedidoId, (int) $currentUser['id'], $estadoEntrega]);
@@ -1277,7 +1277,7 @@ try {
         }
         $stmt = $pdo->prepare("UPDATE pagos pa
             INNER JOIN pedidos p ON p.id = pa.pedido_id
-            SET pa.estado = 'Pagado', pa.pagado_en = CURRENT_TIMESTAMP, pa.codigo_transaccion = IF(pa.metodo = 'QR', ?, NULL)
+            SET pa.estado = 'Pagado', pa.pagado_en = CURRENT_TIMESTAMP, pa.codigo_transaccion = CASE WHEN pa.metodo = 'QR' THEN ? ELSE NULL END
             WHERE p.id = ? AND p.estado NOT IN ('Entregado', 'Cancelado')
             AND pa.estado = 'Pendiente' AND pa.metodo = 'QR' AND ? <> ''");
         $stmt->execute([$codigoTransaccion, $pedidoId, $codigoTransaccion]);
