@@ -875,7 +875,7 @@ try {
             FROM pagos pa
             INNER JOIN pedidos p ON p.id = pa.pedido_id
             INNER JOIN clientes c ON c.id = p.cliente_id
-            WHERE pa.estado = 'Pagado' AND pa.pagado_en >= ? AND pa.pagado_en < DATE_ADD(?, INTERVAL 1 DAY)
+            WHERE pa.estado = 'Pagado' AND pa.pagado_en >= ? AND pa.pagado_en < (?::date + INTERVAL '1 day')
             ORDER BY pa.pagado_en DESC, pa.id DESC");
         $ingresosStmt->execute([$desde, $hasta]);
         $egresosStmt = $pdo->prepare("SELECT e.id, e.categoria, e.concepto, e.monto,
@@ -883,7 +883,7 @@ try {
             FROM arqueo_egresos e
             INNER JOIN arqueos_caja a ON a.id = e.arqueo_caja_id
             LEFT JOIN usuarios u ON u.id = e.usuario_id
-            WHERE e.creado_en >= ? AND e.creado_en < DATE_ADD(?, INTERVAL 1 DAY)
+            WHERE e.creado_en >= ? AND e.creado_en < (?::date + INTERVAL '1 day')
             ORDER BY e.creado_en DESC, e.id DESC");
         $egresosStmt->execute([$desde, $hasta]);
         $ingresos = $ingresosStmt->fetchAll();
