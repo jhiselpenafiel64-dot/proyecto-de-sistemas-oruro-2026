@@ -1123,7 +1123,7 @@ try {
         if (!is_string($json)) {
             jsonResponse(['ok' => false, 'mensaje' => 'No se pudo preparar la configuración para guardarla.'], 500);
         }
-        $stmt = $pdo->prepare('INSERT INTO configuracion_empresa (id, configuracion) VALUES (1, ?) ON CONFLICT (id) DO UPDATE SET configuracion = EXCLUDED.configuracion');
+        $stmt = $pdo->prepare('INSERT INTO configuracion_empresa (id, configuracion) VALUES (1, ?) ON CONFLICT (id) DO UPDATE SET configuracion = EXCLUDED.configuracion, actualizado_en = CURRENT_TIMESTAMP');
         $stmt->execute([$json]);
         header('Cache-Control: no-store, private');
         jsonResponse(['ok' => true, 'configuracion' => $configuracion]);
@@ -1464,7 +1464,7 @@ try {
         if (!is_string($contenidoJson)) {
             jsonResponse(['ok' => false, 'mensaje' => 'No se pudo preparar el contenido para guardarlo.'], 500);
         }
-        $stmt = $pdo->prepare('INSERT INTO contenido_inicio (id, contenido) VALUES (1, ?) ON CONFLICT (id) DO UPDATE SET contenido = EXCLUDED.contenido');
+        $stmt = $pdo->prepare('INSERT INTO contenido_inicio (id, contenido) VALUES (1, ?) ON CONFLICT (id) DO UPDATE SET contenido = EXCLUDED.contenido, actualizado_en = CURRENT_TIMESTAMP');
         $stmt->execute([$contenidoJson]);
         header('Cache-Control: no-store, private');
         jsonResponse(['ok' => true, 'contenido' => $contenido]);
