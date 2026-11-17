@@ -1190,12 +1190,10 @@ try {
         if ($codigoTransaccion === '') {
             jsonResponse(['ok' => false, 'mensaje' => 'Ingresa el código de transacción del pago QR.'], 422);
         }
-        $stmt = $pdo->prepare("UPDATE pagos pa
-            INNER JOIN pedidos p ON p.id = pa.pedido_id
-            SET pa.estado = 'Pagado', pa.pagado_en = CURRENT_TIMESTAMP, pa.codigo_transaccion = CASE WHEN pa.metodo = 'QR' THEN ? ELSE NULL END
-            WHERE p.id = ? AND p.tipo_entrega = 'Delivery' AND p.estado NOT IN ('Entregado', 'Cancelado')
-            AND pa.estado = 'Pendiente' AND pa.metodo = 'QR' AND ? <> ''
-            AND (? <> 'Repartidor' OR p.repartidor_id = ?)");
+        $stmt = $pdo->prepare("UPDATE pagos AS pa
+            SET estado = 'Pagado', pagado_en = CURRENT_TIMESTAMP, codigo_transaccion = CASE WHEN metodo = 'QR' THEN ? ELSE NULL END
+            WHERE pa.pedido_id IN (SELECT p.id FROM pedidos p WHERE p.id = ? AND p.tipo_entrega = 'Delivery' AND p.estado NOT IN ('Entregado', 'Cancelado') AND (? <> 'Repartidor' OR p.repartidor_id = ?))
+            AND pa.estado = 'Pendiente' AND pa.metodo = 'QR' AND ? <> ''");
         $stmt->execute([$codigoTransaccion, $pedidoId, $currentUser['rol'], (int) $currentUser['id'], $codigoTransaccion]);
         if ($stmt->rowCount() !== 1) {
             jsonResponse(['ok' => false, 'mensaje' => 'No se encontró un pago pendiente o falta el código de transacción QR.'], 404);
@@ -1212,11 +1210,9 @@ try {
         if ($pedidoId === false || $pedidoId < 1) {
             jsonResponse(['ok' => false, 'mensaje' => 'Pedido inválido.'], 422);
         }
-        $stmt = $pdo->prepare("UPDATE pagos pa
-            INNER JOIN pedidos p ON p.id = pa.pedido_id
-            SET pa.estado = 'Pagado', pa.pagado_en = CURRENT_TIMESTAMP
-            WHERE p.id = ? AND p.repartidor_id = ? AND p.tipo_entrega = 'Delivery'
-            AND p.estado NOT IN ('Entregado', 'Cancelado')
+        $stmt = $pdo->prepare("UPDATE pagos AS pa
+            SET estado = 'Pagado', pagado_en = CURRENT_TIMESTAMP
+            WHERE pa.pedido_id IN (SELECT p.id FROM pedidos p WHERE p.id = ? AND p.repartidor_id = ? AND p.tipo_entrega = 'Delivery' AND p.estado NOT IN ('Entregado', 'Cancelado'))
             AND pa.estado = 'Pendiente' AND pa.metodo = 'Efectivo'");
         $stmt->execute([$pedidoId, (int) $currentUser['id']]);
         if ($stmt->rowCount() !== 1) {
@@ -1235,10 +1231,10 @@ try {
         if ($pedidoId === false || $pedidoId < 1 || !in_array($estadoEntrega, ['En camino', 'Entregado'], true)) {
             jsonResponse(['ok' => false, 'mensaje' => 'Pedido o estado de entrega inválido.'], 422);
         }
-        $stmt = $pdo->prepare("UPDATE pedidos p
-            INNER JOIN pagos pa ON pa.pedido_id = p.id
-            SET p.estado_entrega = ?, p.estado = CASE WHEN ? = 'Entregado' THEN 'Entregado' ELSE p.estado END
-            WHERE p.id = ? AND p.repartidor_id = ? AND p.tipo_entrega = 'Delivery' AND p.estado NOT IN ('Entregado', 'Cancelado')
+        $stmt = $pdo->prepare("UPDATE pedidos AS p
+            SET estado_entrega = ?, estado = CASE WHEN ? = 'Entregado' THEN 'Entregado' ELSE p.estado END
+            FROM pagos AS pa
+            WHERE pa.pedido_id = p.id AND p.id = ? AND p.repartidor_id = ? AND p.tipo_entrega = 'Delivery' AND p.estado NOT IN ('Entregado', 'Cancelado')
             AND (pa.estado = 'Pagado' OR ? <> 'Entregado')");
         $stmt->execute([$estadoEntrega, $estadoEntrega, $pedidoId, (int) $currentUser['id'], $estadoEntrega]);
         if ($stmt->rowCount() !== 1) {
@@ -1275,10 +1271,9 @@ try {
         if ($codigoTransaccion === '') {
             jsonResponse(['ok' => false, 'mensaje' => 'Ingresa el código de transacción del pago QR.'], 422);
         }
-        $stmt = $pdo->prepare("UPDATE pagos pa
-            INNER JOIN pedidos p ON p.id = pa.pedido_id
-            SET pa.estado = 'Pagado', pa.pagado_en = CURRENT_TIMESTAMP, pa.codigo_transaccion = CASE WHEN pa.metodo = 'QR' THEN ? ELSE NULL END
-            WHERE p.id = ? AND p.estado NOT IN ('Entregado', 'Cancelado')
+        $stmt = $pdo->prepare("UPDATE pagos AS pa
+            SET estado = 'Pagado', pagado_en = CURRENT_TIMESTAMP, codigo_transaccion = CASE WHEN metodo = 'QR' THEN ? ELSE NULL END
+            WHERE pa.pedido_id IN (SELECT p.id FROM pedidos p WHERE p.id = ? AND p.estado NOT IN ('Entregado', 'Cancelado'))
             AND pa.estado = 'Pendiente' AND pa.metodo = 'QR' AND ? <> ''");
         $stmt->execute([$codigoTransaccion, $pedidoId, $codigoTransaccion]);
         if ($stmt->rowCount() !== 1) {
@@ -1296,11 +1291,9 @@ try {
         if ($pedidoId === false || $pedidoId < 1) {
             jsonResponse(['ok' => false, 'mensaje' => 'Pedido inválido.'], 422);
         }
-        $stmt = $pdo->prepare("UPDATE pagos pa
-            INNER JOIN pedidos p ON p.id = pa.pedido_id
-            SET pa.estado = 'Pagado', pa.pagado_en = CURRENT_TIMESTAMP
-            WHERE p.id = ? AND p.usuario_id IS NULL AND p.tipo_entrega = 'Retiro'
-            AND p.estado NOT IN ('Entregado', 'Cancelado')
+        $stmt = $pdo->prepare("UPDATE pagos AS pa
+            SET estado = 'Pagado', pagado_en = CURRENT_TIMESTAMP
+            WHERE pa.pedido_id IN (SELECT p.id FROM pedidos p WHERE p.id = ? AND p.usuario_id IS NULL AND p.tipo_entrega = 'Retiro' AND p.estado NOT IN ('Entregado', 'Cancelado'))
             AND pa.metodo = 'Efectivo' AND pa.estado = 'Pendiente'");
         $stmt->execute([$pedidoId]);
         if ($stmt->rowCount() !== 1) {
